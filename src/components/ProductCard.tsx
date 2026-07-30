@@ -1,5 +1,6 @@
 import { useCart } from "../context/CartContext";
 import type { Product } from "../types/product";
+import { formatCurrency } from "../utils/formatCurrency";
 
 interface ProductCardProps {
     product: Product
@@ -7,11 +8,7 @@ interface ProductCardProps {
 
 export default function ProductCard({ product }: ProductCardProps) {
     const { dispatch } = useCart()
-    const rands = product.price / 100
-    const formatted = rands.toLocaleString('en-ZA', {
-        style: 'currency',
-        currency: 'ZAR'
-    })
+    const formatted = formatCurrency(product.price)
 
     return (
         <article className="bg-white p-4 rounded-xl shadow-md flex flex-col space-y-2">
