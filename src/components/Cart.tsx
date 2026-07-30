@@ -1,11 +1,22 @@
 import { useCart } from "../context/CartContext";
+import { buildOrderMessage } from "../utils/buildOrderMessage";
 import { formatCurrency } from "../utils/formatCurrency";
+
+const WHATSAPP_NUMBER = '27821234567'
 
 export default function Cart() {
   const { items, dispatch } = useCart();
 
   if (items.length === 0) {
     return <p className="text-center text-cocoa">Your cart is empty</p>;
+  }
+
+  function whatsAppOrder() {
+    const message = buildOrderMessage(items)
+    const encoded = encodeURIComponent(message)
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`
+
+    window.open(url, '_blank', 'noopener')
   }
 
   return (
@@ -50,6 +61,11 @@ export default function Cart() {
         onClick={() => dispatch({ type: 'CLEAR'})}
         >
         Clear Cart
+      </button>
+      <button
+        onClick={whatsAppOrder}
+      >
+        Checkout on Whatsapp
       </button>
     </div>
   );
