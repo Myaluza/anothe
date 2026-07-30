@@ -1,3 +1,4 @@
+import { useCart } from "../context/CartContext";
 import type { Product } from "../types/product";
 
 interface ProductCardProps {
@@ -5,6 +6,7 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+    const { dispatch } = useCart()
     const rands = product.price / 100
     const formatted = rands.toLocaleString('en-ZA', {
         style: 'currency',
@@ -26,6 +28,13 @@ export default function ProductCard({ product }: ProductCardProps) {
             {product.inStock 
                 ? <p className="text-sm text-green-700">In stock</p>
                 : <p className="text-sm text-red-600">Out of stock</p>}
+            <button
+                className="bg-espresso text-cream py-2 px-4 rounded-lg w-full hover:bg-cocoa disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={() => dispatch({ type: 'ADD', product})}
+                disabled={!product.inStock}
+            >
+                Add to cart
+            </button>
         </article>
     )
 }
