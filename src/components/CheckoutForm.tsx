@@ -2,6 +2,10 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import type { CustomerDetails } from "../types/customer";
 import type { FormErrors } from "../types/customer";
 import { validateCheckout } from "../utils/validateCheckout";
+import { useCart } from "../context/CartContext";
+import { buildOrderMessage } from "../utils/buildOrderMessage";
+
+const WHATSAPP_NUMBER = '27821234567'
 
 export default function CheckoutForm() {
   const [details, setDetails] = useState<CustomerDetails>({
@@ -11,6 +15,7 @@ export default function CheckoutForm() {
     note: "",
   });
   const [errors, setErrors] = useState<FormErrors>({})
+  const { items } = useCart()
 
   function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const {name, value} = e.target
@@ -27,7 +32,9 @@ export default function CheckoutForm() {
         return
     }
 
-    console.log(details)
+    const message = buildOrderMessage(items, details)
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
+    window.open(url, '_blank', 'noopener')
   }
 
   return (
