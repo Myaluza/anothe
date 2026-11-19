@@ -2,7 +2,18 @@ export const SHOP_NAME = 'Anothe'
 
 // WhatsApp number orders are sent to, in international format without "+" or spaces.
 // TODO: replace this placeholder with the shop's real WhatsApp number before promoting the site.
-export const WHATSAPP_NUMBER = '27821234567'
+const DEFAULT_WHATSAPP_NUMBER = '27821234567'
+
+// Uses `value` if it looks like a WhatsApp number (8 to 15 digits, spaces and "+" ignored),
+// otherwise the default, so a typo in a setting can't break ordering.
+export function resolveWhatsAppNumber(value: string | undefined, fallback = DEFAULT_WHATSAPP_NUMBER): string {
+    const digits = (value ?? '').replace(/[\s+]/g, '')
+    return /^\d{8,15}$/.test(digits) ? digits : fallback
+}
+
+// Can be set per environment with VITE_WHATSAPP_NUMBER in Vercel (e.g. a test number for
+// preview deployments). It's read when the site is built, so redeploy after changing it.
+export const WHATSAPP_NUMBER = resolveWhatsAppNumber(import.meta.env?.VITE_WHATSAPP_NUMBER)
 
 // Most units a customer can add in one go from a product card or product page.
 export const MAX_QUANTITY_PER_ADD = 20

@@ -1,5 +1,5 @@
 import { products } from '../src/data/products'
-import { COLLECTION, DELIVERY_FEE_CENTS, WHATSAPP_NUMBER } from '../src/config'
+import { COLLECTION, DELIVERY_FEE_CENTS } from '../src/config'
 import { formatCurrency } from '../src/utils/formatCurrency'
 import { addToCart, expect, openedLinks, test } from './fixtures'
 import type { Page } from '@playwright/test'
@@ -13,11 +13,15 @@ async function goToCheckoutWithOneItem(page: Page) {
     await page.goto('/checkout')
 }
 
+// The order goes to the same number as the footer's WhatsApp link. Reading it from the page
+// keeps this right whichever number the build uses (VITE_WHATSAPP_NUMBER or the default).
 async function sentMessage(page: Page) {
     const links = await openedLinks(page)
     expect(links).toHaveLength(1)
     const url = new URL(links[0])
-    expect(`${url.origin}${url.pathname}`).toBe(`https://wa.me/${WHATSAPP_NUMBER}`)
+    const footerLink = await page.getByRole('contentinfo').getByRole('link', { name: 'Chat with us on WhatsApp' }).getAttribute('href')
+    expect(footerLink).toMatch(/^https:\/\/wa\.me\/\d{8,15}$/)
+    expect(`${url.origin}${url.pathname}`).toBe(footerLink)
     return url.searchParams.get('text') ?? ''
 }
 

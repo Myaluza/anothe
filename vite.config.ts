@@ -25,7 +25,7 @@ export default defineConfig({
       output: {
         // Third-party code (React, router, analytics) goes in its own file. It only changes
         // when packages are updated, so returning visitors keep it cached across deploys.
-        advancedChunks: {
+        codeSplitting: {
           groups: [{ name: 'vendor', test: /[\\/]node_modules[\\/]/ }],
         },
       },
