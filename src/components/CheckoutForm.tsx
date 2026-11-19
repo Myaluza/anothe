@@ -2,7 +2,7 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import type { CustomerDetails } from "../types/customer";
 import type { FormErrors } from "../types/customer";
 import { validateCheckout } from "../utils/validateCheckout";
-import { useCart } from "../context/CartContext";
+import { useCart } from "../context/useCart";
 import { buildOrderMessage } from "../utils/buildOrderMessage";
 
 const WHATSAPP_NUMBER = '27821234567'

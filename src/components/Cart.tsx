@@ -1,6 +1,5 @@
-import { useCart } from "../context/CartContext";
+import { useCart } from "../context/useCart";
 import { formatCurrency } from "../utils/formatCurrency";
-import CheckoutForm from "./CheckoutForm";
 
 export default function Cart() {
   const { items, dispatch } = useCart();
@@ -52,7 +51,6 @@ export default function Cart() {
         >
         Clear Cart
       </button>
-      <CheckoutForm />
     </div>
   );
 }
