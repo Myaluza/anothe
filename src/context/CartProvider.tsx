@@ -1,13 +1,7 @@
-import { createContext, useContext, useEffect, useReducer, type Dispatch, type ReactNode } from "react";
-import type { CartAction, CartItem } from "../types/cart";
+import { useEffect, useReducer, type ReactNode } from "react";
+import type { CartItem } from "../types/cart";
 import { cartReducer } from "../reducers/cartReducer";
-
-export interface CartContextValue {
-    items: CartItem[]
-    dispatch: Dispatch<CartAction>
-}
-
-const CartContext = createContext<CartContextValue | undefined>(undefined)
+import { CartContext } from "./useCart";
 
 function loadCart(): CartItem[] {
     try {
@@ -34,14 +28,4 @@ export function CartProvider({ children }: { children: ReactNode }) {
             {children}
         </CartContext.Provider>
     )
-}
-
-export function useCart() {
-    const context = useContext(CartContext)
-
-    if (context === undefined) {
-        throw new Error("useCart must be used inside a CartProvider")
-    }
-
-    return context
 }
