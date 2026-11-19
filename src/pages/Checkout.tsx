@@ -13,7 +13,7 @@ export default function Checkout() {
             <h2 className="text-3xl font-display text-gold text-center">Your Cart</h2>
             <Cart />
             {items.length > 0 && <CheckoutForm />}
-            <Link className="block text-center text-cocoa hover:underline" to='/'>Continue shopping</Link>
+            <Link className="block py-2 text-center text-cocoa hover:underline" to='/'>Continue shopping</Link>
         </section>
     )
 }

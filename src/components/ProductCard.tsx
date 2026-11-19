@@ -42,7 +42,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             <VariantPicker product={product} selectedId={variant.id} onChange={setVariantId} />
             {isInStock(product)
                 ? <p className="text-sm text-green-700">In stock</p>
-                : <p className="text-sm text-red-600">Out of stock</p>}
+                : <p className="text-sm text-red-700">Out of stock</p>}
             <button
                 className={`py-2 px-4 rounded-lg w-full transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${justAdded ? 'bg-gold text-white' : 'bg-espresso text-cream hover:bg-cocoa'}`}
                 onClick={handleAdd}

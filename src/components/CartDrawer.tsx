@@ -43,7 +43,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     return (
         <div className={`fixed inset-0 z-50 ${isOpen ? '' : 'pointer-events-none'}`} inert={!isOpen}>
             <div
-                className={`absolute inset-0 bg-cocoa/40 transition-opacity ${isOpen ? 'opacity-100' : 'opacity-0'}`}
+                className={`absolute inset-0 bg-cocoa/40 transition-opacity motion-reduce:transition-none ${isOpen ? 'opacity-100' : 'opacity-0'}`}
                 onClick={onClose}
                 aria-hidden="true"
             />
@@ -51,14 +51,14 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 role="dialog"
                 aria-modal="true"
                 aria-labelledby="cart-drawer-title"
-                className={`absolute right-0 top-0 h-full w-full max-w-md bg-cream shadow-xl flex flex-col transition-transform ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+                className={`absolute right-0 top-0 h-full w-full max-w-md bg-cream shadow-xl flex flex-col transition-transform motion-reduce:transition-none ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
             >
-                <header className="flex items-center justify-between px-6 py-4 border-b border-gold/40">
+                <header className="flex items-center justify-between px-6 py-4 border-b border-gold-light/40">
                     <h2 id="cart-drawer-title" className="text-2xl font-display text-gold">Your Cart</h2>
                     <button
                         ref={closeButtonRef}
                         onClick={onClose}
-                        className="text-cocoa text-2xl leading-none px-2 hover:text-gold"
+                        className="text-cocoa text-2xl leading-none w-10 h-10 flex items-center justify-center hover:text-gold"
                         aria-label="Close cart"
                     >
                         ×
@@ -70,7 +70,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 </div>
 
                 {items.length > 0 && (
-                    <footer className="border-t border-gold/40 px-6 py-4 space-y-3">
+                    <footer className="border-t border-gold-light/40 px-6 py-4 space-y-3">
                         <p className="flex justify-between text-lg text-espresso font-semibold">
                             <span>Subtotal</span>
                             <span>{formatCurrency(totalCents)}</span>

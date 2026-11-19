@@ -14,4 +14,5 @@ export type FormErrors = {
     phone?: string
     areaId?: string
     address?: string
+    note?: string
 }

@@ -50,7 +50,7 @@ export default function OrderConfirmed() {
                     {copyState === 'copied' ? 'Copied ✓' : 'Copy order message'}
                 </button>
                 {copyState === 'failed' && (
-                    <p className="text-sm text-red-600">Couldn't copy automatically. Select the message below and copy it.</p>
+                    <p className="text-sm text-red-700">Couldn't copy automatically. Select the message below and copy it.</p>
                 )}
             </div>
 
@@ -59,7 +59,7 @@ export default function OrderConfirmed() {
                 <pre className="mt-3 whitespace-pre-wrap font-body text-sm text-cocoa select-all">{order.message}</pre>
             </details>
 
-            <Link to="/" className="inline-block text-cocoa hover:underline">Continue shopping</Link>
+            <Link to="/" className="inline-block py-2 text-cocoa hover:underline">Continue shopping</Link>
         </section>
     )
 }

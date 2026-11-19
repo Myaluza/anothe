@@ -22,7 +22,7 @@ export default function VariantPicker({ product, selectedId, onChange }: Variant
             <label htmlFor={selectId} className="sr-only">Choose an option for {product.name}</label>
             <select
                 id={selectId}
-                className="w-full border border-cocoa/40 rounded-lg px-3 py-2 bg-white text-cocoa"
+                className="w-full border border-cocoa/70 rounded-lg px-3 py-2 bg-white text-cocoa"
                 value={selectedId}
                 onChange={e => onChange(e.target.value)}
             >

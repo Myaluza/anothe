@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { validateCheckout, isValidSouthAfricanPhone } from './validateCheckout'
+import { validateCheckout, isValidSouthAfricanPhone, FIELD_LIMITS } from './validateCheckout'
 import type { CustomerDetails } from '../types/customer'
 import { DELIVERY_AREAS } from '../config'
 
@@ -51,5 +51,36 @@ describe('isValidSouthAfricanPhone', () => {
     it('gives a phone error for an invalid number', () => {
         const errors = validateCheckout({ ...validDelivery, phone: '12345' })
         expect(errors.phone).toBeDefined()
+    })
+})
+
+describe('validateCheckout length limits', () => {
+    it('accepts values exactly at each limit', () => {
+        expect(validateCheckout({
+            ...validDelivery,
+            name: 'a'.repeat(FIELD_LIMITS.name),
+            address: 'a'.repeat(FIELD_LIMITS.address),
+            note: 'a'.repeat(FIELD_LIMITS.note),
+        })).toEqual({})
+    })
+
+    it('rejects values one character over each limit', () => {
+        const errors = validateCheckout({
+            ...validDelivery,
+            name: 'a'.repeat(FIELD_LIMITS.name + 1),
+            address: 'a'.repeat(FIELD_LIMITS.address + 1),
+            note: 'a'.repeat(FIELD_LIMITS.note + 1),
+        })
+        expect(Object.keys(errors).sort()).toEqual(['address', 'name', 'note'])
+    })
+
+    it('rejects an over-long phone even if its digits look valid', () => {
+        const padded = '082 123 4567' + ' '.repeat(FIELD_LIMITS.phone)
+        expect(validateCheckout({ ...validDelivery, phone: padded }).phone).toBeDefined()
+    })
+
+    it('ignores the address limit for collection orders', () => {
+        const errors = validateCheckout({ ...validDelivery, fulfilment: 'collection', areaId: '', address: 'a'.repeat(FIELD_LIMITS.address + 1) })
+        expect(errors).toEqual({})
     })
 })

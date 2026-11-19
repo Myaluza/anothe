@@ -1,7 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { useNavigate } from "react-router";
 import type { CustomerDetails, FormErrors, Fulfilment } from "../types/customer";
-import { validateCheckout } from "../utils/validateCheckout";
+import { FIELD_LIMITS, validateCheckout } from "../utils/validateCheckout";
 import { useCart } from "../context/useCart";
 import { buildOrderMessage } from "../utils/buildOrderMessage";
 import { cartTotal } from "../utils/cartTotals";
@@ -15,7 +15,7 @@ const inputClass = 'w-full border border-cocoa rounded-lg px-3 py-2 bg-white'
 const labelClass = 'block text-sm text-cocoa mb-1'
 
 // Checked in this order so focus goes to the first problem on the page.
-const FIELD_ORDER: (keyof FormErrors)[] = ['name', 'phone', 'areaId', 'address']
+const FIELD_ORDER: (keyof FormErrors)[] = ['name', 'phone', 'areaId', 'address', 'note']
 
 // Links a field to its error message so screen readers announce it.
 function errorProps(errors: FormErrors, field: keyof FormErrors) {
@@ -25,7 +25,7 @@ function errorProps(errors: FormErrors, field: keyof FormErrors) {
 }
 
 function FieldError({ errors, field }: { errors: FormErrors; field: keyof FormErrors }) {
-    return errors[field] ? <p id={`${field}-error`} className="text-sm text-red-600">{errors[field]}</p> : null
+    return errors[field] ? <p id={`${field}-error`} className="text-sm text-red-700">{errors[field]}</p> : null
 }
 
 export default function CheckoutForm() {
@@ -79,13 +79,13 @@ export default function CheckoutForm() {
   }
 
   const optionClass = (active: boolean) =>
-    `flex-1 text-center cursor-pointer rounded-lg border px-4 py-3 ${active ? 'border-espresso bg-espresso text-cream' : 'border-cocoa/40 text-cocoa hover:border-gold'}`
+    `flex-1 text-center cursor-pointer rounded-lg border px-4 py-3 ${active ? 'border-espresso bg-espresso text-cream' : 'border-cocoa/70 text-cocoa hover:border-gold-light'}`
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         <div>
             <label className={labelClass} htmlFor='name'>Name</label>
-            <input id='name' name='name' autoComplete='name' className={inputClass} value={details.name} onChange={handleChange} {...errorProps(errors, 'name')} />
+            <input id='name' name='name' autoComplete='name' maxLength={FIELD_LIMITS.name} className={inputClass} value={details.name} onChange={handleChange} {...errorProps(errors, 'name')} />
             <FieldError errors={errors} field='name' />
         </div>
         <div>
@@ -96,6 +96,7 @@ export default function CheckoutForm() {
                 type='tel'
                 inputMode='tel'
                 autoComplete='tel'
+                maxLength={FIELD_LIMITS.phone}
                 placeholder='082 123 4567'
                 className={inputClass}
                 value={details.phone}
@@ -146,6 +147,7 @@ export default function CheckoutForm() {
                         id='address'
                         name='address'
                         autoComplete='street-address'
+                        maxLength={FIELD_LIMITS.address}
                         placeholder='House number, street, complex/unit'
                         className={inputClass}
                         value={details.address}
@@ -165,7 +167,8 @@ export default function CheckoutForm() {
 
         <div>
             <label className={labelClass} htmlFor='note'>Notes</label>
-            <textarea id='note' name='note' className={inputClass} rows={4} value={details.note ?? ""} onChange={handleChange}></textarea>
+            <textarea id='note' name='note' className={inputClass} rows={4} maxLength={FIELD_LIMITS.note} value={details.note ?? ""} onChange={handleChange} {...errorProps(errors, 'note')}></textarea>
+            <FieldError errors={errors} field='note' />
         </div>
 
         <dl className="rounded-lg bg-white px-4 py-3 space-y-1 text-cocoa">
@@ -174,7 +177,7 @@ export default function CheckoutForm() {
                 <dt>{isDelivery ? 'Delivery' : 'Collection'}</dt>
                 <dd>{isDelivery ? (details.areaId ? formatCurrency(fee) : 'Choose an area') : 'Free'}</dd>
             </div>
-            <div className="flex justify-between text-lg font-semibold text-espresso border-t border-gold/40 pt-1">
+            <div className="flex justify-between text-lg font-semibold text-espresso border-t border-gold-light/40 pt-1">
                 <dt>Total</dt><dd>{formatCurrency(subtotal + fee)}</dd>
             </div>
         </dl>
