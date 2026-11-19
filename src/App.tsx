@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react'
 import Home from './pages/Home'
 import Checkout from './pages/Checkout'
 import ProductDetail from './pages/ProductDetail'
+import OrderConfirmed from './pages/OrderConfirmed'
 import NotFound from './pages/NotFound'
 import CartButton from './components/CartButton'
 import CartDrawer from './components/CartDrawer'
@@ -30,6 +31,7 @@ export default function App() {
         <Route path='/' element={<Home />} />
         <Route path='/product/:slug' element={<ProductDetail />} />
         <Route path='/checkout' element={<Checkout />} />
+        <Route path='/order/confirmed' element={<OrderConfirmed />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
       <Footer />

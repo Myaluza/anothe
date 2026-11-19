@@ -1,4 +1,5 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
+import { useNavigate } from "react-router";
 import type { CustomerDetails, FormErrors, Fulfilment } from "../types/customer";
 import { validateCheckout } from "../utils/validateCheckout";
 import { useCart } from "../context/useCart";
@@ -6,6 +7,8 @@ import { buildOrderMessage } from "../utils/buildOrderMessage";
 import { cartTotal } from "../utils/cartTotals";
 import { deliveryFee } from "../utils/delivery";
 import { formatCurrency } from "../utils/formatCurrency";
+import { createOrderRef } from "../utils/createOrderRef";
+import { saveLastOrder } from "../utils/lastOrder";
 import { COLLECTION, DELIVERY_AREAS, WHATSAPP_NUMBER } from "../config";
 
 const inputClass = 'w-full border border-cocoa rounded-lg px-3 py-2 bg-white'
@@ -21,7 +24,8 @@ export default function CheckoutForm() {
     note: "",
   });
   const [errors, setErrors] = useState<FormErrors>({})
-  const { items } = useCart()
+  const { items, dispatch } = useCart()
+  const navigate = useNavigate()
 
   const subtotal = cartTotal(items)
   const fee = deliveryFee(details)
@@ -47,9 +51,15 @@ export default function CheckoutForm() {
         return
     }
 
-    const message = buildOrderMessage(items, details)
-    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
-    window.open(url, '_blank', 'noopener')
+    const ref = createOrderRef()
+    const message = buildOrderMessage(items, details, ref)
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
+
+    saveLastOrder({ ref, name: details.name.trim(), message, totalCents: subtotal + fee, whatsappUrl })
+    // Open WhatsApp while still inside the click handler so popup blockers allow it.
+    window.open(whatsappUrl, '_blank', 'noopener')
+    dispatch({ type: 'CLEAR' })
+    navigate('/order/confirmed')
   }
 
   const optionClass = (active: boolean) =>
