@@ -1,31 +1,31 @@
 import type { CartItem, CartAction } from "../types/cart";
+import { isSameLine } from "../utils/cartTotals";
 
 export function cartReducer(state: CartItem[], action: CartAction): CartItem[] {
-    function removeItem(state: CartItem[], productId: string): CartItem[] {
-        return state.filter(item => item.product.id !== productId);
+    function removeItem(productId: string, variantId: string): CartItem[] {
+        return state.filter(item => !isSameLine(item, productId, variantId))
     }
 
     switch (action.type) {
         case 'ADD': {
-            const existing = state.find(item => item.product.id === action.product.id)
+            const { product, variant } = action
+            const existing = state.find(item => isSameLine(item, product.id, variant.id))
             if (existing) {
                 return state.map(item =>
-                    item.product.id === action.product.id
-                        ? { ...item, quantity: item.quantity + 1 }
-                        : item
+                    item === existing ? { ...item, quantity: item.quantity + 1 } : item
                 )
             }
-            return [...state, { product: action.product, quantity: 1 }]
+            return [...state, { product, variant, quantity: 1 }]
         }
         case 'REMOVE':
-            return removeItem(state, action.productId)
+            return removeItem(action.productId, action.variantId)
         case 'UPDATE_QUANTITY':
             if (action.quantity < 1) {
-                return removeItem(state, action.productId)
+                return removeItem(action.productId, action.variantId)
             }
             return state.map(item =>
-                item.product.id === action.productId
-                    ? { ...item, quantity: action.quantity}
+                isSameLine(item, action.productId, action.variantId)
+                    ? { ...item, quantity: action.quantity }
                     : item
             )
         case 'CLEAR':

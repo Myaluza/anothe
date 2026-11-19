@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router";
 import { useCart } from "../context/useCart";
+import { cartCount } from "../utils/cartTotals";
 
 interface CartButtonProps {
     onOpenCart: () => void
@@ -8,7 +9,7 @@ interface CartButtonProps {
 export default function CartButton({ onOpenCart }: CartButtonProps) {
     const { items } = useCart()
     const { pathname } = useLocation()
-    const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
+    const totalItems = cartCount(items)
     const buttonStyles = "bg-gold text-cream rounded py-4 px-8 fixed top-4 right-4 z-40 hover:bg-espresso"
 
     if (totalItems === 0 || pathname === '/checkout') {

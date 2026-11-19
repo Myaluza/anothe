@@ -5,6 +5,7 @@ import { products } from "../data/products";
 import { CATEGORIES, type Category } from "../types/product";
 import { filterProducts } from "../utils/filterProducts";
 import { formatCurrency } from "../utils/formatCurrency";
+import { cartCount, cartTotal } from "../utils/cartTotals";
 
 function parseCategory(value: string | null): Category | null {
     return CATEGORIES.find(c => c === value) ?? null
@@ -16,8 +17,8 @@ export default function Home() {
     const category = parseCategory(searchParams.get('category'))
     const query = searchParams.get('q') ?? ''
 
-    const totalItems = items.reduce((sum, item) => sum + item.quantity, 0)
-    const totalCents = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
+    const totalItems = cartCount(items)
+    const totalCents = cartTotal(items)
     const visibleProducts = filterProducts(products, { category, query })
 
     function updateParams(next: { category?: Category | null; q?: string }) {

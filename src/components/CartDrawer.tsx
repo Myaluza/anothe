@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import Cart from "./Cart";
 import { useCart } from "../context/useCart";
 import { formatCurrency } from "../utils/formatCurrency";
+import { cartTotal } from "../utils/cartTotals";
 
 interface CartDrawerProps {
     isOpen: boolean
@@ -12,7 +13,7 @@ interface CartDrawerProps {
 export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     const { items } = useCart()
     const closeButtonRef = useRef<HTMLButtonElement>(null)
-    const totalCents = items.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
+    const totalCents = cartTotal(items)
 
     useEffect(() => {
         if (!isOpen) {
