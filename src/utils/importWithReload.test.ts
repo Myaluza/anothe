@@ -28,6 +28,14 @@ describe('reloadOnce', () => {
         expect(storage.has(RELOAD_FLAG)).toBe(false)
     })
 
+    it('does not reload while offline, and leaves the flag unset', () => {
+        const storage = memoryStorage()
+        const reload = vi.fn()
+        expect(reloadOnce({ storage, reload, isOnline: () => false })).toBe(false)
+        expect(reload).not.toHaveBeenCalled()
+        expect(storage.has(RELOAD_FLAG)).toBe(false)
+    })
+
     it('does not reload when storage is unavailable', () => {
         const reload = vi.fn()
         expect(reloadOnce({ storage: null, reload })).toBe(false)

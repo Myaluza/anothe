@@ -8,6 +8,8 @@ export const RELOAD_FLAG = 'anothe:chunk-reload'
 interface ReloadDeps {
     storage: Pick<Storage, 'getItem' | 'setItem' | 'removeItem'> | null
     reload: () => void
+    // Reloading while offline would replace our error page with the browser's "No internet" page.
+    isOnline?: () => boolean
 }
 
 function browserDeps(): ReloadDeps {
@@ -17,13 +19,14 @@ function browserDeps(): ReloadDeps {
     } catch {
         // Storage blocked (e.g. strict privacy settings): fall back to showing the error page.
     }
-    return { storage, reload: () => window.location.reload() }
+    return { storage, reload: () => window.location.reload(), isOnline: () => navigator.onLine }
 }
 
-// Returns true if a reload was started, false if one already happened (or can't be tracked).
+// Returns true if a reload was started, false if one already happened, the visitor is
+// offline, or it can't be tracked. In those cases the error page (with a Reload button) shows.
 export function reloadOnce(deps: ReloadDeps = browserDeps()): boolean {
-    const { storage, reload } = deps
-    if (!storage) return false
+    const { storage, reload, isOnline = () => true } = deps
+    if (!storage || !isOnline()) return false
     try {
         if (storage.getItem(RELOAD_FLAG)) {
             // Already reloaded once and it still fails: clear the flag so a later deploy
