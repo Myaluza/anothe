@@ -10,9 +10,11 @@ import QuantityStepper from "./QuantityStepper";
 
 interface ProductCardProps {
     product: Product
+    // True for cards in the first row: their image loads straight away (it's likely the LCP element).
+    priority?: boolean
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, priority = false }: ProductCardProps) {
     const { dispatch } = useCart()
     const [justAdded, showAdded] = useAddedFeedback()
     const [variantId, setVariantId] = useState(() => defaultVariant(product).id)
@@ -31,8 +33,11 @@ export default function ProductCard({ product }: ProductCardProps) {
                 <img
                     src={product.image}
                     alt=""
-                    className="w-full aspect-4/3 object-cover rounded-lg bg-cream hover:opacity-90"
-                    loading="lazy"
+                    width={800}
+                    height={600}
+                    className="w-full h-auto aspect-4/3 object-cover rounded-lg bg-cream hover:opacity-90"
+                    loading={priority ? "eager" : "lazy"}
+                    fetchPriority={priority ? "high" : "auto"}
                 />
             </Link>
             <p className="text-sm text-gold uppercase">{product.category}</p>

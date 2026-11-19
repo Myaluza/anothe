@@ -1,15 +1,17 @@
 import { Routes, Route, useLocation } from 'react-router'
-import { useCallback, useState } from 'react'
+import { lazy, Suspense, useCallback, useState } from 'react'
 import Home from './pages/Home'
-import Checkout from './pages/Checkout'
-import ProductDetail from './pages/ProductDetail'
-import OrderConfirmed from './pages/OrderConfirmed'
-import About from './pages/About'
 import Header from './components/Header'
-import NotFound from './pages/NotFound'
 import CartDrawer from './components/CartDrawer'
 import Footer from './components/Footer'
 import { useScrollToTop } from './hooks/useScrollToTop'
+
+// The shop page loads with the app; other pages download only when first visited.
+const ProductDetail = lazy(() => import('./pages/ProductDetail'))
+const Checkout = lazy(() => import('./pages/Checkout'))
+const OrderConfirmed = lazy(() => import('./pages/OrderConfirmed'))
+const About = lazy(() => import('./pages/About'))
+const NotFound = lazy(() => import('./pages/NotFound'))
 
 export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false)
@@ -38,14 +40,17 @@ export default function App() {
         </a>
         <Header onOpenCart={openCart} />
         <main id='main' tabIndex={-1} className='focus:outline-none'>
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/product/:slug' element={<ProductDetail />} />
-            <Route path='/about' element={<About />} />
-            <Route path='/checkout' element={<Checkout />} />
-            <Route path='/order/confirmed' element={<OrderConfirmed />} />
-            <Route path='*' element={<NotFound />} />
-          </Routes>
+          {/* Fixed-height placeholder while a page downloads, so the footer doesn't jump. */}
+          <Suspense fallback={<div className='min-h-[60vh]' aria-busy='true' />}>
+            <Routes>
+              <Route path='/' element={<Home />} />
+              <Route path='/product/:slug' element={<ProductDetail />} />
+              <Route path='/about' element={<About />} />
+              <Route path='/checkout' element={<Checkout />} />
+              <Route path='/order/confirmed' element={<OrderConfirmed />} />
+              <Route path='*' element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </main>
         <Footer />
       </div>

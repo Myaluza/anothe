@@ -45,7 +45,10 @@ function ProductDetailContent({ product }: { product: Product }) {
                 <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full aspect-4/3 object-cover rounded-lg bg-cream"
+                    width={800}
+                    height={600}
+                    fetchPriority="high"
+                    className="w-full h-auto aspect-4/3 object-cover rounded-lg bg-cream"
                 />
 
                 <div className="flex flex-col space-y-4">

@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { ABOUT_INTRO, FAQS, RETURNS_POLICY } from "../data/about";
+import { ABOUT_INTRO, FAQS, INFORMATION_OFFICER, PRIVACY_NOTICE, RETURNS_POLICY } from "../data/about";
 import { COLLECTION, DELIVERY_AREAS, SHOP_NAME, WHATSAPP_NUMBER } from "../config";
 import { formatCurrency } from "../utils/formatCurrency";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
@@ -57,6 +57,13 @@ export default function About() {
                         </details>
                     ))}
                 </div>
+            </Section>
+
+            <Section id="privacy" title="Privacy">
+                {PRIVACY_NOTICE.map(p => <p key={p} className="leading-relaxed">{p}</p>)}
+                <p className="leading-relaxed">
+                    Information Officer: {INFORMATION_OFFICER.name}, {INFORMATION_OFFICER.contact}.
+                </p>
             </Section>
 
             <Section id="contact" title="Contact us">

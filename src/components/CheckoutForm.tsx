@@ -1,5 +1,5 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import { useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router";
 import type { CustomerDetails, FormErrors, Fulfilment } from "../types/customer";
 import { FIELD_LIMITS, validateCheckout } from "../utils/validateCheckout";
 import { useCart } from "../context/useCart";
@@ -183,6 +183,10 @@ export default function CheckoutForm() {
         </dl>
 
         <button className="w-full bg-gold text-white py-3 rounded-lg text-lg font-semibold hover:bg-espresso" type="submit">Order on WhatsApp</button>
+        <p className="text-sm text-cocoa text-center">
+            Your details go only into the WhatsApp message you send us.{' '}
+            <Link to="/about#privacy" className="inline-block py-1 underline hover:text-gold">Privacy</Link>
+        </p>
     </form>
   );
 }
