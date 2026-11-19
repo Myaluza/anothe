@@ -25,12 +25,14 @@ export default function Cart() {
             <div className="flex items-center gap-2">
                 <button
                     className="bg-cream text-espresso px-3 py-1 rounded hover:bg-gold"
+                    aria-label={`Decrease quantity of ${item.product.name}`}
                     onClick={() => dispatch({ type: 'UPDATE_QUANTITY', productId: item.product.id, quantity: item.quantity - 1})}
                 >
                     -
                 </button>
                 <button
                     className="bg-cream text-espresso px-3 py-1 rounded hover:bg-gold"
+                    aria-label={`Increase quantity of ${item.product.name}`}
                     onClick={() => dispatch({ type: 'UPDATE_QUANTITY', productId: item.product.id, quantity: item.quantity + 1})}>
                     +
                 </button>

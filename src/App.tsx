@@ -5,6 +5,7 @@ import Checkout from './pages/Checkout'
 import NotFound from './pages/NotFound'
 import CartButton from './components/CartButton'
 import CartDrawer from './components/CartDrawer'
+import Footer from './components/Footer'
 
 export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false)
@@ -29,6 +30,7 @@ export default function App() {
         <Route path='/checkout' element={<Checkout />} />
         <Route path='*' element={<NotFound />} />
       </Routes>
+      <Footer />
     </div>
   )
 }

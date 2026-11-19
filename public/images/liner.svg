@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Eye-liner placeholder">
+  <rect width="800" height="600" fill="#faf6ee"/>
+  <rect x="24" y="24" width="752" height="552" fill="none" stroke="#c5a15b" stroke-width="2"/>
+  <rect x="180" y="285" width="320" height="50" rx="25" fill="#4e3120"/><rect x="500" y="290" width="120" height="40" rx="8" fill="#c5a15b"/><polygon points="620,295 660,310 620,325" fill="#2e2620"/>
+  <text x="400" y="530" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="40" fill="#4e3120">Eye-liner</text>
+</svg>
