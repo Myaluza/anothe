@@ -4,6 +4,9 @@ export const SHOP_NAME = 'Anothe'
 // TODO: replace this placeholder with the shop's real WhatsApp number before promoting the site.
 export const WHATSAPP_NUMBER = '27821234567'
 
+// Most units a customer can add in one go from a product card or product page.
+export const MAX_QUANTITY_PER_ADD = 20
+
 export interface DeliveryArea {
     id: string
     name: string

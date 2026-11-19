@@ -1,11 +1,8 @@
 import { useSearchParams } from "react-router";
 import ProductCard from "../components/ProductCard";
-import { useCart } from "../context/useCart";
 import { products } from "../data/products";
 import { CATEGORIES, type Category } from "../types/product";
 import { filterProducts } from "../utils/filterProducts";
-import { formatCurrency } from "../utils/formatCurrency";
-import { cartCount, cartTotal } from "../utils/cartTotals";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 function parseCategory(value: string | null): Category | null {
@@ -13,14 +10,11 @@ function parseCategory(value: string | null): Category | null {
 }
 
 export default function Home() {
-    const { items } = useCart()
     useDocumentTitle(null)
     const [searchParams, setSearchParams] = useSearchParams()
     const category = parseCategory(searchParams.get('category'))
     const query = searchParams.get('q') ?? ''
 
-    const totalItems = cartCount(items)
-    const totalCents = cartTotal(items)
     const visibleProducts = filterProducts(products, { category, query })
 
     function updateParams(next: { category?: Category | null; q?: string }) {
@@ -42,8 +36,8 @@ export default function Home() {
 
     return(
         <section>
-            <h1 className="text-center text-5xl font-display text-gold">Anothe</h1>
-            <p className="text-center text-cocoa">{totalItems} {totalItems === 1 ? 'item' : 'items'} · {formatCurrency(totalCents)}</p>
+            {/* The shop name is already in the header; this heading is for screen readers. */}
+            <h1 className="sr-only">Shop all products</h1>
 
             <div className="max-w-3xl mx-auto my-6 space-y-4">
                 <label htmlFor="product-search" className="sr-only">Search products</label>
