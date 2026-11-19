@@ -15,6 +15,9 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm ci
+      # Fail on high or critical advisories in code that ships to the browser.
+      # Dev-only tooling advisories are handled by Dependabot PRs instead of blocking merges.
+      - run: npm audit --omit=dev --audit-level=high
       - run: npm run lint
       - run: npx vitest run
       - run: npm run build
