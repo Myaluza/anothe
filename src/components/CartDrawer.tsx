@@ -64,9 +64,10 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 {items.length > 0 && (
                     <footer className="border-t border-gold/40 px-6 py-4 space-y-3">
                         <p className="flex justify-between text-lg text-espresso font-semibold">
-                            <span>Total</span>
+                            <span>Subtotal</span>
                             <span>{formatCurrency(totalCents)}</span>
                         </p>
+                        <p className="text-sm text-cocoa/80">Delivery or collection is chosen at checkout.</p>
                         <Link
                             to="/checkout"
                             onClick={onClose}

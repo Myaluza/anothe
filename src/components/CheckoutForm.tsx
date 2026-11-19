@@ -1,30 +1,45 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
-import type { CustomerDetails } from "../types/customer";
-import type { FormErrors } from "../types/customer";
+import type { CustomerDetails, FormErrors, Fulfilment } from "../types/customer";
 import { validateCheckout } from "../utils/validateCheckout";
 import { useCart } from "../context/useCart";
 import { buildOrderMessage } from "../utils/buildOrderMessage";
+import { cartTotal } from "../utils/cartTotals";
+import { deliveryFee } from "../utils/delivery";
+import { formatCurrency } from "../utils/formatCurrency";
+import { COLLECTION, DELIVERY_AREAS, WHATSAPP_NUMBER } from "../config";
 
-import { WHATSAPP_NUMBER } from "../config";
+const inputClass = 'w-full border border-cocoa rounded-lg px-3 py-2 bg-white'
+const labelClass = 'block text-sm text-cocoa mb-1'
 
 export default function CheckoutForm() {
   const [details, setDetails] = useState<CustomerDetails>({
     name: "",
     phone: "",
-    area: "",
+    fulfilment: "delivery",
+    areaId: "",
+    address: "",
     note: "",
   });
   const [errors, setErrors] = useState<FormErrors>({})
   const { items } = useCart()
 
-  function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
+  const subtotal = cartTotal(items)
+  const fee = deliveryFee(details)
+  const isDelivery = details.fulfilment === 'delivery'
+
+  function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
     const {name, value} = e.target
     setDetails(prev => ({...prev, [name]: value}))
   }
 
+  function setFulfilment(fulfilment: Fulfilment) {
+    setDetails(prev => ({ ...prev, fulfilment }))
+    setErrors(prev => ({ ...prev, areaId: undefined, address: undefined }))
+  }
+
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    
+
     const newErrors = validateCheckout(details)
     setErrors(newErrors)
 
@@ -37,26 +52,18 @@ export default function CheckoutForm() {
     window.open(url, '_blank', 'noopener')
   }
 
+  const optionClass = (active: boolean) =>
+    `flex-1 text-center cursor-pointer rounded-lg border px-4 py-3 ${active ? 'border-espresso bg-espresso text-cream' : 'border-cocoa/40 text-cocoa hover:border-gold'}`
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         <div>
-            <label className='block text-sm text-cocoa mb-1' htmlFor='name'>
-                Name
-            </label>
-            <input
-                id='name'
-                name='name'
-                autoComplete='name'
-                className='w-full border border-cocoa rounded-lg px-3 py-2'
-                value={details.name}
-                onChange={handleChange}
-            />
+            <label className={labelClass} htmlFor='name'>Name</label>
+            <input id='name' name='name' autoComplete='name' className={inputClass} value={details.name} onChange={handleChange} />
             {errors.name && <p className="text-sm text-red-600">{errors.name}</p>}
         </div>
         <div>
-            <label className='block text-sm text-cocoa mb-1' htmlFor='phone'>
-                Phone
-            </label>
+            <label className={labelClass} htmlFor='phone'>Phone</label>
             <input
                 id='phone'
                 name='phone'
@@ -64,39 +71,86 @@ export default function CheckoutForm() {
                 inputMode='tel'
                 autoComplete='tel'
                 placeholder='082 123 4567'
-                className='w-full border border-cocoa rounded-lg px-3 py-2'
+                className={inputClass}
                 value={details.phone}
                 onChange={handleChange}
             />
             {errors.phone && <p className="text-sm text-red-600">{errors.phone}</p>}
         </div>
+
+        {COLLECTION.enabled && (
+            <fieldset>
+                <legend className={labelClass}>How would you like to get your order?</legend>
+                <div className="flex gap-3">
+                    {(['delivery', 'collection'] as const).map(option => (
+                        <label key={option} className={optionClass(details.fulfilment === option)}>
+                            <input
+                                type="radio"
+                                name="fulfilment"
+                                value={option}
+                                className="sr-only"
+                                checked={details.fulfilment === option}
+                                onChange={() => setFulfilment(option)}
+                            />
+                            {option === 'delivery' ? 'Delivery' : 'Collection (free)'}
+                        </label>
+                    ))}
+                </div>
+            </fieldset>
+        )}
+
+        {isDelivery ? (
+            <>
+                <div>
+                    <label className={labelClass} htmlFor='areaId'>Delivery area</label>
+                    <select id='areaId' name='areaId' className={inputClass} value={details.areaId} onChange={handleChange}>
+                        <option value="">Choose your area</option>
+                        {DELIVERY_AREAS.map(area => (
+                            <option key={area.id} value={area.id}>
+                                {area.name} — {formatCurrency(area.feeCents)}
+                            </option>
+                        ))}
+                    </select>
+                    {errors.areaId && <p className="text-sm text-red-600">{errors.areaId}</p>}
+                </div>
+                <div>
+                    <label className={labelClass} htmlFor='address'>Street address</label>
+                    <input
+                        id='address'
+                        name='address'
+                        autoComplete='street-address'
+                        placeholder='House number, street, complex/unit'
+                        className={inputClass}
+                        value={details.address}
+                        onChange={handleChange}
+                    />
+                    {errors.address && <p className="text-sm text-red-600">{errors.address}</p>}
+                </div>
+            </>
+        ) : (
+            <div className="rounded-lg bg-white px-4 py-3 text-sm text-cocoa">
+                <p className="font-semibold">Collect from</p>
+                <p>{COLLECTION.address}</p>
+                <p className="text-cocoa/80">{COLLECTION.note}</p>
+            </div>
+        )}
+
         <div>
-            <label className='block text-sm text-cocoa mb-1' htmlFor='area'>
-                Area
-            </label>
-            <input
-                id='area'
-                name='area'
-                autoComplete='address-level2'
-                className='w-full border border-cocoa rounded-lg px-3 py-2'
-                value={details.area}
-                onChange={handleChange}
-            />
-            {errors.area && <p className="text-sm text-red-600">{errors.area}</p>}
+            <label className={labelClass} htmlFor='note'>Notes</label>
+            <textarea id='note' name='note' className={inputClass} rows={4} value={details.note ?? ""} onChange={handleChange}></textarea>
         </div>
-        <div>
-            <label className='block text-sm text-cocoa mb-1' htmlFor='note'>
-                Notes
-            </label>
-            <textarea
-                id='note'
-                name='note'
-                className='w-full border border-cocoa rounded-lg px-3 py-2'
-                rows={4}
-                value={details.note ?? ""}
-                onChange={handleChange}
-            ></textarea>
-        </div>
+
+        <dl className="rounded-lg bg-white px-4 py-3 space-y-1 text-cocoa">
+            <div className="flex justify-between"><dt>Subtotal</dt><dd>{formatCurrency(subtotal)}</dd></div>
+            <div className="flex justify-between">
+                <dt>{isDelivery ? 'Delivery' : 'Collection'}</dt>
+                <dd>{isDelivery ? (details.areaId ? formatCurrency(fee) : 'Choose an area') : 'Free'}</dd>
+            </div>
+            <div className="flex justify-between text-lg font-semibold text-espresso border-t border-gold/40 pt-1">
+                <dt>Total</dt><dd>{formatCurrency(subtotal + fee)}</dd>
+            </div>
+        </dl>
+
         <button className="w-full bg-gold text-white py-3 rounded-lg text-lg font-semibold hover:bg-espresso" type="submit">Order on WhatsApp</button>
     </form>
   );
