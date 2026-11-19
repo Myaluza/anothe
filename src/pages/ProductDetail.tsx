@@ -8,6 +8,7 @@ import { defaultVariant, findVariant } from "../utils/productHelpers";
 import { useAddedFeedback } from "../hooks/useAddedFeedback";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import VariantPicker from "../components/VariantPicker";
+import QuantityStepper from "../components/QuantityStepper";
 import NotFound from "./NotFound";
 
 export default function ProductDetail() {
@@ -22,8 +23,6 @@ export default function ProductDetail() {
     return <ProductDetailContent key={product.id} product={product} />
 }
 
-const MAX_QUANTITY = 20
-
 function ProductDetailContent({ product }: { product: Product }) {
     const { dispatch } = useCart()
     const [justAdded, showAdded] = useAddedFeedback()
@@ -37,8 +36,6 @@ function ProductDetailContent({ product }: { product: Product }) {
         dispatch({ type: 'ADD', product, variant, quantity })
         showAdded()
     }
-
-    const stepButton = "bg-cream text-espresso w-10 h-10 rounded hover:bg-gold-light disabled:opacity-40"
 
     return (
         <section className="max-w-5xl mx-auto">
@@ -63,12 +60,7 @@ function ProductDetailContent({ product }: { product: Product }) {
                         ? <p className="text-sm text-green-700">In stock</p>
                         : <p className="text-sm text-red-700">Out of stock</p>}
 
-                    <div className="flex items-center gap-3">
-                        <span className="text-sm text-cocoa">Quantity</span>
-                        <button className={stepButton} aria-label="Decrease quantity" disabled={quantity <= 1} onClick={() => setQuantity(q => q - 1)}>-</button>
-                        <span className="w-8 text-center text-espresso font-semibold" aria-live="polite">{quantity}</span>
-                        <button className={stepButton} aria-label="Increase quantity" disabled={quantity >= MAX_QUANTITY} onClick={() => setQuantity(q => q + 1)}>+</button>
-                    </div>
+                    <QuantityStepper value={quantity} onChange={setQuantity} productName={product.name} disabled={!variant.inStock} />
 
                     <button
                         className={`py-3 px-4 rounded-lg w-full text-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${justAdded ? 'bg-gold text-white' : 'bg-espresso text-cream hover:bg-cocoa'}`}
