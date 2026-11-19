@@ -9,6 +9,8 @@ export default function Footer() {
             </p>
             <p>
                 <Link className="inline-block py-1.5 underline hover:text-gold" to="/about">About, delivery & FAQ</Link>
+                {' · '}
+                <Link className="inline-block py-1.5 underline hover:text-gold" to="/about#privacy">Privacy</Link>
             </p>
             <p>© {new Date().getFullYear()} {SHOP_NAME}</p>
         </footer>
