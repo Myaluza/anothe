@@ -15,7 +15,8 @@ export default function ProductCard({ product }: ProductCardProps) {
             <img
                 src={product.image}
                 alt={product.name}
-                className="w-full h-48 object-cover rounded-lg"
+                className="w-full aspect-4/3 object-cover rounded-lg bg-cream"
+                loading="lazy"
             />
             <p className="text-sm text-gold uppercase">{product.category}</p>
             <h3 className="text-xl font-display text-cocoa">{product.name}</h3>

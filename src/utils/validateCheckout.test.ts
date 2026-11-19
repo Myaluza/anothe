@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { validateCheckout} from './validateCheckout'
+import { validateCheckout, isValidSouthAfricanPhone } from './validateCheckout'
 import type { CustomerDetails } from '../types/customer'
 
 
@@ -24,5 +24,20 @@ describe('validateCheckout', () => {
         const errors = validateCheckout(whitespaceDetails)
 
         expect(errors.name).toBeDefined()
+    })
+})
+
+describe('isValidSouthAfricanPhone', () => {
+    it.each(['0681234567', '082 123 4567', '+27 82 123 4567', '27821234567', '(011) 123-4567'])('accepts %s', phone => {
+        expect(isValidSouthAfricanPhone(phone)).toBe(true)
+    })
+
+    it.each(['12345', '08212345678', '+44 20 7946 0958', 'phone'])('rejects %s', phone => {
+        expect(isValidSouthAfricanPhone(phone)).toBe(false)
+    })
+
+    it('gives a phone error for an invalid number', () => {
+        const errors = validateCheckout({ name: 'Thuthu', phone: '12345', area: 'Durban' })
+        expect(errors.phone).toBeDefined()
     })
 })

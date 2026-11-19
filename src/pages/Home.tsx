@@ -1,6 +1,6 @@
 import ProductCard from "../components/ProductCard";
 import { useCart } from "../context/useCart";
-import { productsArray } from "../types/product";
+import { products } from "../data/products";
 import { formatCurrency } from "../utils/formatCurrency";
 
 export default function Home() {
@@ -14,7 +14,7 @@ export default function Home() {
             <h1 className="text-center text-5xl font-display text-gold">Anothe</h1>
             <p className="text-center text-cocoa">{totalItems} items · {totalFormatted}</p>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {productsArray.map(product => (
+                {products.map(product => (
                 <ProductCard key={product.id} product={product} />
             ))}
             </div>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Cream placeholder">
+  <rect width="800" height="600" fill="#faf6ee"/>
+  <rect x="24" y="24" width="752" height="552" fill="none" stroke="#c5a15b" stroke-width="2"/>
+  <rect x="300" y="230" width="200" height="180" rx="20" fill="#c5a15b" opacity="0.85"/><rect x="290" y="200" width="220" height="50" rx="12" fill="#4e3120"/>
+  <text x="400" y="530" text-anchor="middle" font-family="Cormorant Garamond, Georgia, serif" font-size="40" fill="#4e3120">Cream</text>
+</svg>

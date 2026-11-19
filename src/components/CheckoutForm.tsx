@@ -5,7 +5,7 @@ import { validateCheckout } from "../utils/validateCheckout";
 import { useCart } from "../context/useCart";
 import { buildOrderMessage } from "../utils/buildOrderMessage";
 
-const WHATSAPP_NUMBER = '27821234567'
+import { WHATSAPP_NUMBER } from "../config";
 
 export default function CheckoutForm() {
   const [details, setDetails] = useState<CustomerDetails>({
@@ -46,6 +46,7 @@ export default function CheckoutForm() {
             <input
                 id='name'
                 name='name'
+                autoComplete='name'
                 className='w-full border border-cocoa rounded-lg px-3 py-2'
                 value={details.name}
                 onChange={handleChange}
@@ -59,6 +60,10 @@ export default function CheckoutForm() {
             <input
                 id='phone'
                 name='phone'
+                type='tel'
+                inputMode='tel'
+                autoComplete='tel'
+                placeholder='082 123 4567'
                 className='w-full border border-cocoa rounded-lg px-3 py-2'
                 value={details.phone}
                 onChange={handleChange}
@@ -72,6 +77,7 @@ export default function CheckoutForm() {
             <input
                 id='area'
                 name='area'
+                autoComplete='address-level2'
                 className='w-full border border-cocoa rounded-lg px-3 py-2'
                 value={details.area}
                 onChange={handleChange}
