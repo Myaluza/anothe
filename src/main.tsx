@@ -10,12 +10,16 @@ import { CartProvider } from './context/CartProvider.tsx'
 import { BrowserRouter } from 'react-router'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/react'
+import ErrorBoundary from './components/ErrorBoundary.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
-    <CartProvider>
-      <App />
-    </CartProvider>
+    {/* Last resort if something outside the pages (header, cart) breaks. */}
+    <ErrorBoundary fullPage>
+      <CartProvider>
+        <App />
+      </CartProvider>
+    </ErrorBoundary>
     <Analytics />
     <SpeedInsights />
   </BrowserRouter>
