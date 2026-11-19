@@ -7,6 +7,14 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    ignore:
+      # typescript-eslint (the linter) only supports TypeScript below 6.1 for now, so newer
+      # TypeScript can't install. Remove this once typescript-eslint supports it.
+      - dependency-name: typescript
+        update-types: [version-update:semver-major, version-update:semver-minor]
+      # Keep Node's type definitions on the Node version the site builds with (24, see ci.yml).
+      - dependency-name: '@types/node'
+        update-types: [version-update:semver-major]
     groups:
       npm-minor-and-patch:
         update-types: [minor, patch]
