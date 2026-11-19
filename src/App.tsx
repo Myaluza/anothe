@@ -10,11 +10,13 @@ import NotFound from './pages/NotFound'
 import CartButton from './components/CartButton'
 import CartDrawer from './components/CartDrawer'
 import Footer from './components/Footer'
+import { useScrollToTop } from './hooks/useScrollToTop'
 
 export default function App() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const { pathname } = useLocation()
   const [lastPathname, setLastPathname] = useState(pathname)
+  useScrollToTop()
 
   // Close the drawer whenever the route changes (e.g. browser back/forward).
   if (pathname !== lastPathname) {
