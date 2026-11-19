@@ -29,18 +29,21 @@ export default function App() {
 
   return (
     <div className='bg-cream min-h-screen px-4 py-8'>
-      <Header />
-      <CartButton onOpenCart={openCart} />
+      {/* While the drawer is open, the page behind it can't be reached by keyboard or screen reader. */}
+      <div inert={isCartOpen}>
+        <Header />
+        <CartButton onOpenCart={openCart} />
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path='/product/:slug' element={<ProductDetail />} />
+          <Route path='/about' element={<About />} />
+          <Route path='/checkout' element={<Checkout />} />
+          <Route path='/order/confirmed' element={<OrderConfirmed />} />
+          <Route path='*' element={<NotFound />} />
+        </Routes>
+        <Footer />
+      </div>
       <CartDrawer isOpen={isCartOpen} onClose={closeCart} />
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/product/:slug' element={<ProductDetail />} />
-        <Route path='/about' element={<About />} />
-        <Route path='/checkout' element={<Checkout />} />
-        <Route path='/order/confirmed' element={<OrderConfirmed />} />
-        <Route path='*' element={<NotFound />} />
-      </Routes>
-      <Footer />
     </div>
   )
 }

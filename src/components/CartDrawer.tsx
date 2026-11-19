@@ -20,6 +20,8 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             return
         }
 
+        // Remember what opened the drawer so focus can go back there when it closes.
+        const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null
         closeButtonRef.current?.focus()
 
         function handleKeyDown(e: KeyboardEvent) {
@@ -29,7 +31,13 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
         }
 
         document.addEventListener('keydown', handleKeyDown)
-        return () => document.removeEventListener('keydown', handleKeyDown)
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown)
+            // Skipped when the opener is gone, e.g. the Cart button after going to checkout.
+            if (opener?.isConnected) {
+                opener.focus({ preventScroll: true })
+            }
+        }
     }, [isOpen, onClose])
 
     return (

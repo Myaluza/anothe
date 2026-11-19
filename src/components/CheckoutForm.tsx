@@ -14,6 +14,20 @@ import { COLLECTION, DELIVERY_AREAS, WHATSAPP_NUMBER } from "../config";
 const inputClass = 'w-full border border-cocoa rounded-lg px-3 py-2 bg-white'
 const labelClass = 'block text-sm text-cocoa mb-1'
 
+// Checked in this order so focus goes to the first problem on the page.
+const FIELD_ORDER: (keyof FormErrors)[] = ['name', 'phone', 'areaId', 'address']
+
+// Links a field to its error message so screen readers announce it.
+function errorProps(errors: FormErrors, field: keyof FormErrors) {
+    return errors[field]
+        ? { 'aria-invalid': true, 'aria-describedby': `${field}-error` }
+        : {}
+}
+
+function FieldError({ errors, field }: { errors: FormErrors; field: keyof FormErrors }) {
+    return errors[field] ? <p id={`${field}-error`} className="text-sm text-red-600">{errors[field]}</p> : null
+}
+
 export default function CheckoutForm() {
   const [details, setDetails] = useState<CustomerDetails>({
     name: "",
@@ -47,7 +61,9 @@ export default function CheckoutForm() {
     const newErrors = validateCheckout(details)
     setErrors(newErrors)
 
-    if (Object.keys(newErrors).length > 0) {
+    const firstInvalid = FIELD_ORDER.find(field => newErrors[field])
+    if (firstInvalid) {
+        document.getElementById(firstInvalid)?.focus()
         return
     }
 
@@ -69,8 +85,8 @@ export default function CheckoutForm() {
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
         <div>
             <label className={labelClass} htmlFor='name'>Name</label>
-            <input id='name' name='name' autoComplete='name' className={inputClass} value={details.name} onChange={handleChange} />
-            {errors.name && <p className="text-sm text-red-600">{errors.name}</p>}
+            <input id='name' name='name' autoComplete='name' className={inputClass} value={details.name} onChange={handleChange} {...errorProps(errors, 'name')} />
+            <FieldError errors={errors} field='name' />
         </div>
         <div>
             <label className={labelClass} htmlFor='phone'>Phone</label>
@@ -84,8 +100,9 @@ export default function CheckoutForm() {
                 className={inputClass}
                 value={details.phone}
                 onChange={handleChange}
+                {...errorProps(errors, 'phone')}
             />
-            {errors.phone && <p className="text-sm text-red-600">{errors.phone}</p>}
+            <FieldError errors={errors} field='phone' />
         </div>
 
         {COLLECTION.enabled && (
@@ -113,7 +130,7 @@ export default function CheckoutForm() {
             <>
                 <div>
                     <label className={labelClass} htmlFor='areaId'>Delivery area</label>
-                    <select id='areaId' name='areaId' className={inputClass} value={details.areaId} onChange={handleChange}>
+                    <select id='areaId' name='areaId' className={inputClass} value={details.areaId} onChange={handleChange} {...errorProps(errors, 'areaId')}>
                         <option value="">Choose your area</option>
                         {DELIVERY_AREAS.map(area => (
                             <option key={area.id} value={area.id}>
@@ -121,7 +138,7 @@ export default function CheckoutForm() {
                             </option>
                         ))}
                     </select>
-                    {errors.areaId && <p className="text-sm text-red-600">{errors.areaId}</p>}
+                    <FieldError errors={errors} field='areaId' />
                 </div>
                 <div>
                     <label className={labelClass} htmlFor='address'>Street address</label>
@@ -133,8 +150,9 @@ export default function CheckoutForm() {
                         className={inputClass}
                         value={details.address}
                         onChange={handleChange}
+                        {...errorProps(errors, 'address')}
                     />
-                    {errors.address && <p className="text-sm text-red-600">{errors.address}</p>}
+                    <FieldError errors={errors} field='address' />
                 </div>
             </>
         ) : (
