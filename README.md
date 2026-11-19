@@ -20,12 +20,18 @@ npm run build      # type-check and build to dist/
 
 ## Editing the shop
 
-- **Products:** `src/data/products.ts`. Prices are in **cents**, so `15000` is R150,00. Set `inStock: false` to show a product as sold out.
+- **Products:** `src/data/products.ts`. Each product has a `slug` (its page address, e.g. `/product/eye-liner`) and one or more `variants`, which are sizes or shades. Each variant has its own `label`, `price` and `inStock`. Prices are in **cents**, so `15000` is R150,00. Set a variant's `inStock: false` to show it as sold out.
 - **Product photos:** put them in `public/images/` and set each product's `image` to `/images/<file>`. Aim for about 800px wide and under 200 KB.
 - **WhatsApp number and shop name:** `src/config.ts`. Use the number in international format with no `+` or spaces (e.g. `27821234567`).
+- **Delivery areas, fees and collection point:** `DELIVERY_AREAS` and `COLLECTION` in `src/config.ts`. The checkout and the About page both read from here.
+- **About, returns and FAQ text:** `src/data/about.ts`.
 - **Colours and fonts:** the `@theme` block in `src/index.css`.
 
-Carts are saved in the customer's browser. When they come back, the cart is checked against the current product list, so prices are updated and removed or sold-out products are dropped.
+Carts are saved in the customer's browser. When they come back, the cart is checked against the current product list, so prices are updated and removed or sold-out options are dropped.
+
+Each order gets a reference such as `ANO-K3F9Q7X`, which appears in the WhatsApp message and on the confirmation page. An order is only placed once the customer presses Send in WhatsApp.
+
+Visitor numbers are in the Vercel dashboard under **Analytics**. They're cookieless page views only.
 
 ## How deploys work
 
