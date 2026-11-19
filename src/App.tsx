@@ -4,6 +4,8 @@ import Home from './pages/Home'
 import Checkout from './pages/Checkout'
 import ProductDetail from './pages/ProductDetail'
 import OrderConfirmed from './pages/OrderConfirmed'
+import About from './pages/About'
+import Header from './components/Header'
 import NotFound from './pages/NotFound'
 import CartButton from './components/CartButton'
 import CartDrawer from './components/CartDrawer'
@@ -25,11 +27,13 @@ export default function App() {
 
   return (
     <div className='bg-cream min-h-screen px-4 py-8'>
+      <Header />
       <CartButton onOpenCart={openCart} />
       <CartDrawer isOpen={isCartOpen} onClose={closeCart} />
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/product/:slug' element={<ProductDetail />} />
+        <Route path='/about' element={<About />} />
         <Route path='/checkout' element={<Checkout />} />
         <Route path='/order/confirmed' element={<OrderConfirmed />} />
         <Route path='*' element={<NotFound />} />

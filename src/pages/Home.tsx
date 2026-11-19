@@ -43,7 +43,7 @@ export default function Home() {
     return(
         <section>
             <h1 className="text-center text-5xl font-display text-gold">Anothe</h1>
-            <p className="text-center text-cocoa">{totalItems} items · {formatCurrency(totalCents)}</p>
+            <p className="text-center text-cocoa">{totalItems} {totalItems === 1 ? 'item' : 'items'} · {formatCurrency(totalCents)}</p>
 
             <div className="max-w-3xl mx-auto my-6 space-y-4">
                 <label htmlFor="product-search" className="sr-only">Search products</label>
