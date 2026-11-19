@@ -36,9 +36,9 @@ export default function Home() {
         setSearchParams(params, { replace: true })
     }
 
-    const pillBase = "px-4 py-1.5 rounded-full border text-sm capitalize transition-colors"
+    const pillBase = "px-4 py-2 min-h-10 rounded-full border text-sm capitalize transition-colors"
     const pillClass = (active: boolean) =>
-        `${pillBase} ${active ? 'bg-espresso border-espresso text-cream' : 'border-cocoa/40 text-cocoa hover:border-gold'}`
+        `${pillBase} ${active ? 'bg-espresso border-espresso text-cream' : 'border-cocoa/70 text-cocoa hover:border-gold-light'}`
 
     return(
         <section>
@@ -51,7 +51,7 @@ export default function Home() {
                     id="product-search"
                     type="search"
                     placeholder="Search products"
-                    className="w-full border border-cocoa/40 rounded-lg px-4 py-2 bg-white"
+                    className="w-full border border-cocoa/70 rounded-lg px-4 py-2 bg-white"
                     value={query}
                     onChange={e => updateParams({ q: e.target.value })}
                 />

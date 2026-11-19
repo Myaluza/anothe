@@ -3,12 +3,20 @@
 
 @theme {
   --color-cream: #faf6ee;
-  --color-gold: #c5a15b;
+  /* Accent for text and buttons: 5.35:1 on cream, 5.76:1 under white text (WCAG AA). */
+  --color-gold: #7f6128;
+  /* Original lighter gold: borders, dividers and hover fills only, never text. */
+  --color-gold-light: #c5a15b;
   --color-espresso: #4e3120;
   --color-cocoa: #2e2620;
 
   --font-display: "Cormorant Garamond", serif;
   --font-body: "Inter", sans-serif;
+}
+
+/* Keep focused fields and #anchors clear of the sticky header. */
+html {
+  scroll-padding-top: 6rem;
 }
 
 body {

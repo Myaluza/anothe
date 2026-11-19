@@ -38,11 +38,11 @@ function ProductDetailContent({ product }: { product: Product }) {
         showAdded()
     }
 
-    const stepButton = "bg-cream text-espresso w-10 h-10 rounded hover:bg-gold disabled:opacity-40"
+    const stepButton = "bg-cream text-espresso w-10 h-10 rounded hover:bg-gold-light disabled:opacity-40"
 
     return (
         <section className="max-w-5xl mx-auto">
-            <Link to="/" className="inline-block mb-6 text-cocoa hover:underline">← Back to shop</Link>
+            <Link to="/" className="inline-block py-2 mb-4 text-cocoa hover:underline">← Back to shop</Link>
 
             <div className="grid gap-8 md:grid-cols-2 bg-white rounded-xl shadow-md p-6">
                 <img
@@ -61,7 +61,7 @@ function ProductDetailContent({ product }: { product: Product }) {
 
                     {variant.inStock
                         ? <p className="text-sm text-green-700">In stock</p>
-                        : <p className="text-sm text-red-600">Out of stock</p>}
+                        : <p className="text-sm text-red-700">Out of stock</p>}
 
                     <div className="flex items-center gap-3">
                         <span className="text-sm text-cocoa">Quantity</span>

@@ -27,21 +27,21 @@ export default function Cart() {
             <p className="font-semibold text-espresso">{formatCurrency(lineTotal(item))}</p>
             <div className="flex items-center gap-2">
                 <button
-                    className="bg-cream text-espresso px-3 py-1 rounded hover:bg-gold"
+                    className="bg-cream text-espresso w-10 h-10 rounded hover:bg-gold-light"
                     aria-label={`Decrease quantity of ${name}`}
                     onClick={() => dispatch({ type: 'UPDATE_QUANTITY', productId, variantId, quantity: item.quantity - 1 })}
                 >
                     -
                 </button>
                 <button
-                    className="bg-cream text-espresso px-3 py-1 rounded hover:bg-gold"
+                    className="bg-cream text-espresso w-10 h-10 rounded hover:bg-gold-light"
                     aria-label={`Increase quantity of ${name}`}
                     onClick={() => dispatch({ type: 'UPDATE_QUANTITY', productId, variantId, quantity: item.quantity + 1 })}
                 >
                     +
                 </button>
                 <button
-                    className="text-sm text-red-600 hover:underline"
+                    className="text-sm text-red-700 hover:underline min-h-10 px-2"
                     aria-label={`Remove ${name}`}
                     onClick={() => dispatch({ type: 'REMOVE', productId, variantId })}
                 >

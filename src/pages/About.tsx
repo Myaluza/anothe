@@ -26,7 +26,7 @@ export default function About() {
 
             <Section id="delivery" title="Delivery & collection">
                 <p>We deliver to these areas:</p>
-                <ul className="divide-y divide-gold/30">
+                <ul className="divide-y divide-gold-light/30">
                     {DELIVERY_AREAS.map(area => (
                         <li key={area.id} className="flex justify-between py-1.5">
                             <span>{area.name}</span>
@@ -46,7 +46,7 @@ export default function About() {
             </Section>
 
             <Section id="faq" title="Frequently asked questions">
-                <div className="divide-y divide-gold/30">
+                <div className="divide-y divide-gold-light/30">
                     {FAQS.map(faq => (
                         <details key={faq.question} className="py-3 group">
                             <summary className="cursor-pointer font-semibold text-espresso list-none flex justify-between gap-4">
@@ -72,7 +72,7 @@ export default function About() {
             </Section>
 
             <p className="text-center">
-                <Link to="/" className="text-cocoa hover:underline">← Back to shop</Link>
+                <Link to="/" className="inline-block py-2 text-cocoa hover:underline">← Back to shop</Link>
             </p>
         </div>
     )
