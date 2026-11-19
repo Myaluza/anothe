@@ -4,6 +4,7 @@ import type { Product } from "../types/product";
 
 const testProduct: Product = {
     id: '1',
+    slug: 'cream',
     name: 'cream',
     category: 'skincare',
     image: '/images/cream.svg',
@@ -31,6 +32,12 @@ describe('cartReducer', () => {
         const afterFirst = cartReducer([], { type: 'ADD', product: testProduct, variant: small })
         const afterSecond = cartReducer(afterFirst, { type: 'ADD', product: testProduct, variant: large })
         expect(afterSecond.map(item => item.variant.id)).toEqual(['50ml', '100ml'])
+    })
+
+    it('adds several at once when a quantity is given', () => {
+        let state = cartReducer([], { type: 'ADD', product: testProduct, variant: small, quantity: 3 })
+        state = cartReducer(state, { type: 'ADD', product: testProduct, variant: small, quantity: 2 })
+        expect(state[0].quantity).toBe(5)
     })
 
     it('removes only the matching variant', () => {

@@ -9,13 +9,14 @@ export function cartReducer(state: CartItem[], action: CartAction): CartItem[] {
     switch (action.type) {
         case 'ADD': {
             const { product, variant } = action
+            const amount = action.quantity ?? 1
             const existing = state.find(item => isSameLine(item, product.id, variant.id))
             if (existing) {
                 return state.map(item =>
-                    item === existing ? { ...item, quantity: item.quantity + 1 } : item
+                    item === existing ? { ...item, quantity: item.quantity + amount } : item
                 )
             }
-            return [...state, { product, variant, quantity: 1 }]
+            return [...state, { product, variant, quantity: amount }]
         }
         case 'REMOVE':
             return removeItem(action.productId, action.variantId)

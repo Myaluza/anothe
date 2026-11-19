@@ -7,7 +7,7 @@ export interface CartItem {
 }
 
 export type CartAction =
-    | { type: 'ADD'; product: Product; variant: ProductVariant }
+    | { type: 'ADD'; product: Product; variant: ProductVariant; quantity?: number }
     | { type: 'REMOVE'; productId: string; variantId: string }
     | { type: 'UPDATE_QUANTITY'; productId: string; variantId: string; quantity: number }
     | { type: 'CLEAR' };

@@ -12,6 +12,7 @@ export interface ProductVariant {
 
 export interface Product {
     id: string
+    slug: string // used in the product page address, e.g. /product/eye-liner
     name: string
     category: Category
     image: string

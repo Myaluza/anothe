@@ -5,7 +5,7 @@ import type { CartItem } from '../types/cart'
 import type { Product } from '../types/product'
 
 const liner: Product = {
-    id: '3', name: 'eye-liner', category: 'makeup', image: '',
+    id: '3', slug: 'eye-liner', name: 'eye-liner', category: 'makeup', image: '',
     variants: [
         { id: 'black', label: 'Black', price: 15000, inStock: true },
         { id: 'brown', label: 'Brown', price: 15000, inStock: true },
