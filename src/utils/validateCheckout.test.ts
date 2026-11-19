@@ -1,21 +1,19 @@
 import { describe, it, expect } from 'vitest'
 import { validateCheckout, isValidSouthAfricanPhone, FIELD_LIMITS } from './validateCheckout'
 import type { CustomerDetails } from '../types/customer'
-import { DELIVERY_AREAS } from '../config'
 
 const validDelivery: CustomerDetails = {
     name: 'Thuthu',
     phone: '0681234567',
     fulfilment: 'delivery',
-    areaId: DELIVERY_AREAS[0].id,
     address: '12 Example Road',
     note: 'Leave at the door',
 }
 
 describe('validateCheckout', () => {
     it('returns errors for every required delivery field when empty', () => {
-        const errors = validateCheckout({ name: '', phone: '', fulfilment: 'delivery', areaId: '', address: '' })
-        expect(Object.keys(errors).sort()).toEqual(['address', 'areaId', 'name', 'phone'])
+        const errors = validateCheckout({ name: '', phone: '', fulfilment: 'delivery', address: '' })
+        expect(Object.keys(errors).sort()).toEqual(['address', 'name', 'phone'])
     })
 
     it('returns no errors for a complete delivery order', () => {
@@ -28,13 +26,8 @@ describe('validateCheckout', () => {
         expect(errors.address).toBeDefined()
     })
 
-    it('rejects an unknown delivery area', () => {
-        const errors = validateCheckout({ ...validDelivery, areaId: 'nowhere' })
-        expect(errors.areaId).toBeDefined()
-    })
-
-    it('does not need an area or address for collection', () => {
-        const errors = validateCheckout({ ...validDelivery, fulfilment: 'collection', areaId: '', address: '' })
+    it('does not need an address for collection', () => {
+        const errors = validateCheckout({ ...validDelivery, fulfilment: 'collection', address: '' })
         expect(errors).toEqual({})
     })
 })
@@ -80,7 +73,7 @@ describe('validateCheckout length limits', () => {
     })
 
     it('ignores the address limit for collection orders', () => {
-        const errors = validateCheckout({ ...validDelivery, fulfilment: 'collection', areaId: '', address: 'a'.repeat(FIELD_LIMITS.address + 1) })
+        const errors = validateCheckout({ ...validDelivery, fulfilment: 'collection', address: 'a'.repeat(FIELD_LIMITS.address + 1) })
         expect(errors).toEqual({})
     })
 })

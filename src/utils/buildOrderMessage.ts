@@ -2,7 +2,7 @@ import type { CartItem } from "../types/cart";
 import type { CustomerDetails } from "../types/customer";
 import { formatCurrency } from "./formatCurrency";
 import { cartTotal, lineTotal } from "./cartTotals";
-import { deliveryFee, findArea } from "./delivery";
+import { deliveryFee } from "./delivery";
 import { COLLECTION, SHOP_NAME } from "../config";
 
 export function buildOrderMessage(items: CartItem[], details: CustomerDetails, orderRef?: string): string {
@@ -11,13 +11,12 @@ export function buildOrderMessage(items: CartItem[], details: CustomerDetails, o
     )
 
     const subtotal = cartTotal(items)
-    const fee = deliveryFee(details)
+    const fee = deliveryFee(details.fulfilment)
     const isDelivery = details.fulfilment === 'delivery'
-    const areaName = findArea(details.areaId)?.name ?? details.areaId
 
     const totals = [
         `Subtotal: ${formatCurrency(subtotal)}`,
-        isDelivery ? `Delivery (${areaName}): ${formatCurrency(fee)}` : 'Collection: free',
+        isDelivery ? `Delivery: ${formatCurrency(fee)}` : 'Collection: free',
         `Total: ${formatCurrency(subtotal + fee)}`,
     ]
 
@@ -25,7 +24,7 @@ export function buildOrderMessage(items: CartItem[], details: CustomerDetails, o
         `Name: ${details.name}`,
         `Phone: ${details.phone}`,
         isDelivery
-            ? `Deliver to: ${details.address}, ${areaName}`
+            ? `Deliver to: ${details.address}`
             : `Collect from: ${COLLECTION.address}`,
         ...(details.note ? [`Note: ${details.note}`] : []),
     ]

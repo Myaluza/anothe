@@ -1,5 +1,4 @@
 import type { CustomerDetails, FormErrors } from "../types/customer";
-import { findArea } from "./delivery";
 
 // Longest value each field accepts. The form uses these as maxLength too;
 // they keep the WhatsApp link a sensible size.
@@ -31,9 +30,6 @@ export function validateCheckout(details: CustomerDetails): FormErrors {
         errors.phone = "Please enter a valid phone number, e.g. 082 123 4567"
     }
     if (details.fulfilment === 'delivery') {
-        if (!findArea(details.areaId)) {
-            errors.areaId = "Please choose your delivery area"
-        }
         if (details.address.trim() === '') {
             errors.address = "Please enter your delivery address"
         } else if (details.address.length > FIELD_LIMITS.address) {

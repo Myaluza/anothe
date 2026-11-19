@@ -9,13 +9,13 @@ import { deliveryFee } from "../utils/delivery";
 import { formatCurrency } from "../utils/formatCurrency";
 import { createOrderRef } from "../utils/createOrderRef";
 import { saveLastOrder } from "../utils/lastOrder";
-import { COLLECTION, DELIVERY_AREAS, WHATSAPP_NUMBER } from "../config";
+import { COLLECTION, WHATSAPP_NUMBER } from "../config";
 
 const inputClass = 'w-full border border-cocoa rounded-lg px-3 py-2 bg-white'
 const labelClass = 'block text-sm text-cocoa mb-1'
 
 // Checked in this order so focus goes to the first problem on the page.
-const FIELD_ORDER: (keyof FormErrors)[] = ['name', 'phone', 'areaId', 'address', 'note']
+const FIELD_ORDER: (keyof FormErrors)[] = ['name', 'phone', 'address', 'note']
 
 // Links a field to its error message so screen readers announce it.
 function errorProps(errors: FormErrors, field: keyof FormErrors) {
@@ -33,7 +33,6 @@ export default function CheckoutForm() {
     name: "",
     phone: "",
     fulfilment: "delivery",
-    areaId: "",
     address: "",
     note: "",
   });
@@ -42,17 +41,17 @@ export default function CheckoutForm() {
   const navigate = useNavigate()
 
   const subtotal = cartTotal(items)
-  const fee = deliveryFee(details)
+  const fee = deliveryFee(details.fulfilment)
   const isDelivery = details.fulfilment === 'delivery'
 
-  function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) {
+  function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const {name, value} = e.target
     setDetails(prev => ({...prev, [name]: value}))
   }
 
   function setFulfilment(fulfilment: Fulfilment) {
     setDetails(prev => ({ ...prev, fulfilment }))
-    setErrors(prev => ({ ...prev, areaId: undefined, address: undefined }))
+    setErrors(prev => ({ ...prev, address: undefined }))
   }
 
   function handleSubmit(e: FormEvent) {
@@ -120,7 +119,7 @@ export default function CheckoutForm() {
                                 checked={details.fulfilment === option}
                                 onChange={() => setFulfilment(option)}
                             />
-                            {option === 'delivery' ? 'Delivery' : 'Collection (free)'}
+                            {option === 'delivery' ? `Delivery (${formatCurrency(deliveryFee('delivery'))})` : 'Collection (free)'}
                         </label>
                     ))}
                 </div>
@@ -128,35 +127,21 @@ export default function CheckoutForm() {
         )}
 
         {isDelivery ? (
-            <>
-                <div>
-                    <label className={labelClass} htmlFor='areaId'>Delivery area</label>
-                    <select id='areaId' name='areaId' className={inputClass} value={details.areaId} onChange={handleChange} {...errorProps(errors, 'areaId')}>
-                        <option value="">Choose your area</option>
-                        {DELIVERY_AREAS.map(area => (
-                            <option key={area.id} value={area.id}>
-                                {area.name} — {formatCurrency(area.feeCents)}
-                            </option>
-                        ))}
-                    </select>
-                    <FieldError errors={errors} field='areaId' />
-                </div>
-                <div>
-                    <label className={labelClass} htmlFor='address'>Street address</label>
-                    <input
-                        id='address'
-                        name='address'
-                        autoComplete='street-address'
-                        maxLength={FIELD_LIMITS.address}
-                        placeholder='House number, street, complex/unit'
-                        className={inputClass}
-                        value={details.address}
-                        onChange={handleChange}
-                        {...errorProps(errors, 'address')}
-                    />
-                    <FieldError errors={errors} field='address' />
-                </div>
-            </>
+            <div>
+                <label className={labelClass} htmlFor='address'>Delivery address</label>
+                <input
+                    id='address'
+                    name='address'
+                    autoComplete='street-address'
+                    maxLength={FIELD_LIMITS.address}
+                    placeholder='House number, street, suburb'
+                    className={inputClass}
+                    value={details.address}
+                    onChange={handleChange}
+                    {...errorProps(errors, 'address')}
+                />
+                <FieldError errors={errors} field='address' />
+            </div>
         ) : (
             <div className="rounded-lg bg-white px-4 py-3 text-sm text-cocoa">
                 <p className="font-semibold">Collect from</p>
@@ -175,7 +160,7 @@ export default function CheckoutForm() {
             <div className="flex justify-between"><dt>Subtotal</dt><dd>{formatCurrency(subtotal)}</dd></div>
             <div className="flex justify-between">
                 <dt>{isDelivery ? 'Delivery' : 'Collection'}</dt>
-                <dd>{isDelivery ? (details.areaId ? formatCurrency(fee) : 'Choose an area') : 'Free'}</dd>
+                <dd>{isDelivery ? formatCurrency(fee) : 'Free'}</dd>
             </div>
             <div className="flex justify-between text-lg font-semibold text-espresso border-t border-gold-light/40 pt-1">
                 <dt>Total</dt><dd>{formatCurrency(subtotal + fee)}</dd>

@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { ABOUT_INTRO, FAQS, INFORMATION_OFFICER, PRIVACY_NOTICE, RETURNS_POLICY } from "../data/about";
-import { COLLECTION, DELIVERY_AREAS, SHOP_NAME, WHATSAPP_NUMBER } from "../config";
+import { COLLECTION, DELIVERY_AREAS, DELIVERY_FEE_CENTS, SHOP_NAME, WHATSAPP_NUMBER } from "../config";
 import { formatCurrency } from "../utils/formatCurrency";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
@@ -25,14 +25,11 @@ export default function About() {
             </Section>
 
             <Section id="delivery" title="Delivery & collection">
-                <p>We deliver to these areas:</p>
-                <ul className="divide-y divide-gold-light/30">
-                    {DELIVERY_AREAS.map(area => (
-                        <li key={area.id} className="flex justify-between py-1.5">
-                            <span>{area.name}</span>
-                            <span className="font-semibold text-espresso">{formatCurrency(area.feeCents)}</span>
-                        </li>
-                    ))}
+                <p>
+                    Delivery is <strong className="text-espresso">{formatCurrency(DELIVERY_FEE_CENTS)}</strong> per order. We deliver to:
+                </p>
+                <ul className="list-disc pl-6 space-y-1">
+                    {DELIVERY_AREAS.map(area => <li key={area}>{area}</li>)}
                 </ul>
                 {COLLECTION.enabled && (
                     <p>
