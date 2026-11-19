@@ -5,7 +5,7 @@ import { cartTotal, lineTotal } from "./cartTotals";
 import { deliveryFee, findArea } from "./delivery";
 import { COLLECTION, SHOP_NAME } from "../config";
 
-export function buildOrderMessage(items: CartItem[], details: CustomerDetails): string {
+export function buildOrderMessage(items: CartItem[], details: CustomerDetails, orderRef?: string): string {
     const order = items.map(item =>
         `${item.quantity} x ${item.product.name} (${item.variant.label}) — ${formatCurrency(lineTotal(item))}`
     )
@@ -31,7 +31,7 @@ export function buildOrderMessage(items: CartItem[], details: CustomerDetails): 
     ]
 
     return [
-        `New order from ${SHOP_NAME}`,
+        orderRef ? `New order from ${SHOP_NAME}\nOrder ref: ${orderRef}` : `New order from ${SHOP_NAME}`,
         order.join('\n'),
         totals.join('\n'),
         customer.join('\n'),

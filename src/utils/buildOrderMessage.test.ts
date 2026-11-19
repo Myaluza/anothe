@@ -41,6 +41,11 @@ describe('buildOrderMessage', () => {
         expect(message).not.toContain('Note:')
     })
 
+    it('includes the order reference when given', () => {
+        expect(buildOrderMessage(items, delivery, 'ANO-ABC1234')).toContain('Order ref: ANO-ABC1234')
+        expect(buildOrderMessage(items, delivery)).not.toContain('Order ref')
+    })
+
     it('charges nothing for collection and shows the collection address', () => {
         const message = buildOrderMessage(items, { ...delivery, fulfilment: 'collection', note: 'After 5pm' })
         expect(message).toContain('Collection: free')
