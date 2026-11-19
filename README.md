@@ -24,7 +24,7 @@ npm run build      # type-check and build to dist/
 - **Products:** `src/data/products.ts`. Each product has a `slug` (its page address, e.g. `/product/eye-liner`) and one or more `variants`, which are sizes or shades. Each variant has its own `label`, `price` and `inStock`. Prices are in **cents**, so `15000` is R150,00. Set a variant's `inStock: false` to show it as sold out.
 - **Product photos:** put them in `public/images/` and set each product's `image` to `/images/<file>`. Aim for about 800px wide and under 200 KB.
 - **WhatsApp number and shop name:** `src/config.ts`. Use the number in international format with no `+` or spaces (e.g. `27821234567`). The number can also be set per environment with `VITE_WHATSAPP_NUMBER` in Vercel; see the architecture doc.
-- **Delivery fee, areas and collection point:** `DELIVERY_FEE_CENTS` (one standard fee, in cents), `DELIVERY_AREAS` (the places listed on the About page) and `COLLECTION` in `src/config.ts`. The checkout and the About page both read from here.
+- **Delivery fee and collection point:** `DELIVERY_FEE_CENTS` (one standard fee, in cents) and `COLLECTION` in `src/config.ts`. The checkout and the About page both read from here.
 - **About, returns and FAQ text:** `src/data/about.ts`.
 - **Colours and fonts:** the `@theme` block in `src/index.css`.
 

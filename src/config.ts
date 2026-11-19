@@ -21,10 +21,6 @@ export const MAX_QUANTITY_PER_ADD = 20
 // One standard delivery fee for every delivered order, in cents (8000 = R80,00). Collection is free.
 export const DELIVERY_FEE_CENTS = 8000
 
-// Where the shop delivers, listed on the About page so customers know before ordering.
-// TODO: placeholder areas; replace with the real ones.
-export const DELIVERY_AREAS: string[] = ['Durban Central', 'Umhlanga', 'Pinetown']
-
 // Free collection. Set enabled to false if the shop doesn't offer it.
 // TODO: placeholder address; replace with the real collection point.
 export const COLLECTION = {
