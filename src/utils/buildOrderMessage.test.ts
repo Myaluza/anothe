@@ -4,7 +4,7 @@ import { formatCurrency } from './formatCurrency'
 import type { CartItem } from '../types/cart'
 import type { Product } from '../types/product'
 import type { CustomerDetails } from '../types/customer'
-import { COLLECTION, DELIVERY_AREAS } from '../config'
+import { COLLECTION, DELIVERY_FEE_CENTS } from '../config'
 
 const liner: Product = {
     id: '3', slug: 'eye-liner', name: 'eye-liner', category: 'makeup', image: '',
@@ -19,9 +19,8 @@ const items: CartItem[] = [
     { product: liner, variant: liner.variants[1], quantity: 1 },
 ]
 
-const area = DELIVERY_AREAS[0]
 const delivery: CustomerDetails = {
-    name: 'Thuthu', phone: '0681234567', fulfilment: 'delivery', areaId: area.id, address: '12 Example Road',
+    name: 'Thuthu', phone: '0681234567', fulfilment: 'delivery', address: '12 Example Road, Umhlanga',
 }
 
 describe('buildOrderMessage', () => {
@@ -34,9 +33,9 @@ describe('buildOrderMessage', () => {
     it('adds the delivery fee to the total and includes the address', () => {
         const message = buildOrderMessage(items, delivery)
         expect(message).toContain(`Subtotal: ${formatCurrency(45000)}`)
-        expect(message).toContain(`Delivery (${area.name}): ${formatCurrency(area.feeCents)}`)
-        expect(message).toContain(`Total: ${formatCurrency(45000 + area.feeCents)}`)
-        expect(message).toContain(`Deliver to: 12 Example Road, ${area.name}`)
+        expect(message).toContain(`Delivery: ${formatCurrency(DELIVERY_FEE_CENTS)}`)
+        expect(message).toContain(`Total: ${formatCurrency(45000 + DELIVERY_FEE_CENTS)}`)
+        expect(message).toContain('Deliver to: 12 Example Road, Umhlanga')
         expect(message).toContain('Name: Thuthu')
         expect(message).not.toContain('Note:')
     })
