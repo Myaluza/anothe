@@ -1,29 +1,41 @@
 import { describe, it, expect } from 'vitest'
 import { validateCheckout, isValidSouthAfricanPhone } from './validateCheckout'
 import type { CustomerDetails } from '../types/customer'
+import { DELIVERY_AREAS } from '../config'
 
-
+const validDelivery: CustomerDetails = {
+    name: 'Thuthu',
+    phone: '0681234567',
+    fulfilment: 'delivery',
+    areaId: DELIVERY_AREAS[0].id,
+    address: '12 Example Road',
+    note: 'Leave at the door',
+}
 
 describe('validateCheckout', () => {
-    it('returns errors when all fields are empty', () => {
-        const emptyDetails: CustomerDetails = { name: '', phone: '', area: '', note: '' }
-        const errors = validateCheckout(emptyDetails)
-
-        expect(Object.keys(errors)).toHaveLength(3)
+    it('returns errors for every required delivery field when empty', () => {
+        const errors = validateCheckout({ name: '', phone: '', fulfilment: 'delivery', areaId: '', address: '' })
+        expect(Object.keys(errors).sort()).toEqual(['address', 'areaId', 'name', 'phone'])
     })
 
-    it('returns no errors if all fields are filled', () => {
-        const filledDetails: CustomerDetails = { name: 'Thuthu', phone: '0681234567', area: 'Durban', note: 'Leave at the door' }
-        const errors = validateCheckout(filledDetails)
-
-        expect(errors).toEqual({})
+    it('returns no errors for a complete delivery order', () => {
+        expect(validateCheckout(validDelivery)).toEqual({})
     })
 
     it('returns errors when filled with whitespace', () => {
-        const whitespaceDetails: CustomerDetails = { name: '   ', phone: '0681234567', area: 'Durban', note: 'Leave at the door' }
-        const errors = validateCheckout(whitespaceDetails)
-
+        const errors = validateCheckout({ ...validDelivery, name: '   ', address: '  ' })
         expect(errors.name).toBeDefined()
+        expect(errors.address).toBeDefined()
+    })
+
+    it('rejects an unknown delivery area', () => {
+        const errors = validateCheckout({ ...validDelivery, areaId: 'nowhere' })
+        expect(errors.areaId).toBeDefined()
+    })
+
+    it('does not need an area or address for collection', () => {
+        const errors = validateCheckout({ ...validDelivery, fulfilment: 'collection', areaId: '', address: '' })
+        expect(errors).toEqual({})
     })
 })
 
@@ -37,7 +49,7 @@ describe('isValidSouthAfricanPhone', () => {
     })
 
     it('gives a phone error for an invalid number', () => {
-        const errors = validateCheckout({ name: 'Thuthu', phone: '12345', area: 'Durban' })
+        const errors = validateCheckout({ ...validDelivery, phone: '12345' })
         expect(errors.phone).toBeDefined()
     })
 })
