@@ -1,6 +1,6 @@
 import { Link } from "react-router";
 import { ABOUT_INTRO, FAQS, INFORMATION_OFFICER, PRIVACY_NOTICE, RETURNS_POLICY } from "../data/about";
-import { COLLECTION, DELIVERY_AREAS, DELIVERY_FEE_CENTS, SHOP_NAME, WHATSAPP_NUMBER } from "../config";
+import { COLLECTION, DELIVERY_FEE_CENTS, SHOP_NAME, WHATSAPP_NUMBER } from "../config";
 import { formatCurrency } from "../utils/formatCurrency";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
@@ -26,11 +26,8 @@ export default function About() {
 
             <Section id="delivery" title="Delivery & collection">
                 <p>
-                    Delivery is <strong className="text-espresso">{formatCurrency(DELIVERY_FEE_CENTS)}</strong> per order. We deliver to:
+                    Delivery is <strong className="text-espresso">{formatCurrency(DELIVERY_FEE_CENTS)}</strong> per order.
                 </p>
-                <ul className="list-disc pl-6 space-y-1">
-                    {DELIVERY_AREAS.map(area => <li key={area}>{area}</li>)}
-                </ul>
                 {COLLECTION.enabled && (
                     <p>
                         Or collect for free from <strong>{COLLECTION.address}</strong>. {COLLECTION.note}
