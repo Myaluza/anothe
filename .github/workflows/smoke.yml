@@ -1,0 +1,43 @@
+name: Smoke check (production)
+
+# Checks the live site every 6 hours. If it fails, GitHub emails the repository owner.
+# Run it by hand from the Actions tab after a deploy or a rollback.
+on:
+  schedule:
+    - cron: '17 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      SITE: https://anothe-rouge.vercel.app
+    steps:
+      - name: Pages respond with the app and security headers
+        run: |
+          set -euo pipefail
+          for path in / /product/cream /about /checkout; do
+            url="$SITE$path"
+            headers=$(curl -sS --fail --retry 3 --retry-all-errors --max-time 20 -D - -o page.html "$url")
+            grep -qi '^content-security-policy:' <<<"$headers" || { echo "::error::$url has no Content-Security-Policy header"; exit 1; }
+            grep -q '<title>Anothe</title>' page.html || { echo "::error::$url did not return the shop page"; exit 1; }
+            echo "ok  $url"
+          done
+
+      - name: The app's script and styles download
+        run: |
+          set -euo pipefail
+          curl -sS --fail --retry 3 --retry-all-errors --max-time 20 "$SITE/" -o index.html
+          assets=$(grep -oE '/assets/[^"]+\.(js|css)' index.html | sort -u)
+          [ -n "$assets" ] || { echo "::error::No /assets/ files referenced by index.html"; exit 1; }
+          for asset in $assets; do
+            curl -sS --fail --retry 3 --retry-all-errors --max-time 20 -o /dev/null "$SITE$asset"
+            echo "ok  $asset"
+          done
+          # The main script contains the shop name, so a blank or wrong bundle is caught too.
+          main=$(grep -oE '/assets/index-[^"]+\.js' index.html | head -1)
+          curl -sS --fail --max-time 20 "$SITE$main" | grep -q 'Anothe' || { echo "::error::Main script looks wrong"; exit 1; }
