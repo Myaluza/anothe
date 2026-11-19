@@ -87,6 +87,13 @@ test('missing details: errors are shown, linked to the fields, and focus goes to
     await page.getByRole('button', { name: 'Order on WhatsApp' }).click()
     await expect(page.getByLabel('Phone')).toBeFocused()
     await expect(page.getByLabel('Phone')).toHaveAccessibleDescription(/valid phone number/)
+
+    // Correcting a field clears its error straight away, without pressing Order again.
+    await page.getByLabel('Phone').fill('082 123 4567')
+    await expect(page.getByText(/valid phone number/)).toHaveCount(0)
+    await expect(page.getByLabel('Phone')).not.toHaveAttribute('aria-invalid')
+    // Other fields keep their errors until they're fixed too.
+    await expect(page.getByLabel('Delivery address')).toHaveAttribute('aria-invalid', 'true')
 })
 
 test('the confirmation page without an order goes back to the shop', async ({ page }) => {
