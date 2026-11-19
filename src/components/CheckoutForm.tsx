@@ -47,6 +47,8 @@ export default function CheckoutForm() {
   function handleChange(e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const {name, value} = e.target
     setDetails(prev => ({...prev, [name]: value}))
+    // Hide this field's error once the customer starts fixing it; it's checked again on submit.
+    setErrors(prev => prev[name as keyof FormErrors] ? { ...prev, [name]: undefined } : prev)
   }
 
   function setFulfilment(fulfilment: Fulfilment) {
