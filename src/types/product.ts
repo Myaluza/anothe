@@ -2,13 +2,19 @@ export const CATEGORIES = ['skincare', 'makeup', 'fragrance'] as const
 
 export type Category = typeof CATEGORIES[number]
 
-export interface Product  {
+// One buyable option of a product, e.g. a size ("100ml") or a shade ("Black").
+export interface ProductVariant {
+    id: string
+    label: string
+    price: number // price is stored in cents (ZAR). e.g. 15000 = R150,00
+    inStock: boolean
+}
+
+export interface Product {
     id: string
     name: string
-    price: number // price is stored in cents (ZAR). e.g. 15000 = R150,00
     category: Category
     image: string
-    inStock: boolean
     description?: string
-    variant?: string
+    variants: ProductVariant[] // at least one
 }
