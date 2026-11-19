@@ -6,6 +6,7 @@ import { CATEGORIES, type Category } from "../types/product";
 import { filterProducts } from "../utils/filterProducts";
 import { formatCurrency } from "../utils/formatCurrency";
 import { cartCount, cartTotal } from "../utils/cartTotals";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 function parseCategory(value: string | null): Category | null {
     return CATEGORIES.find(c => c === value) ?? null
@@ -13,6 +14,7 @@ function parseCategory(value: string | null): Category | null {
 
 export default function Home() {
     const { items } = useCart()
+    useDocumentTitle(null)
     const [searchParams, setSearchParams] = useSearchParams()
     const category = parseCategory(searchParams.get('category'))
     const query = searchParams.get('q') ?? ''

@@ -3,7 +3,7 @@ import { filterProducts } from './filterProducts'
 import type { Product } from '../types/product'
 
 const make = (id: string, name: string, category: Product['category'], description?: string): Product =>
-    ({ id, name, category, description, image: '', variants: [{ id: 'v', label: 'One', price: 1000, inStock: true }] })
+    ({ id, slug: id, name, category, description, image: '', variants: [{ id: 'v', label: 'One', price: 1000, inStock: true }] })
 
 const products = [
     make('1', 'Night Cream', 'skincare', 'Rich moisturiser'),

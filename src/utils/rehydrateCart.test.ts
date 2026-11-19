@@ -3,7 +3,7 @@ import { rehydrateCart } from './rehydrateCart'
 import type { Product } from '../types/product'
 
 const cream: Product = {
-    id: '1', name: 'cream', category: 'skincare', image: '/images/cream.svg',
+    id: '1', slug: 'cream', name: 'cream', category: 'skincare', image: '/images/cream.svg',
     variants: [
         { id: '50ml', label: '50ml', price: 9000, inStock: true },
         { id: '100ml', label: '100ml', price: 15000, inStock: false },

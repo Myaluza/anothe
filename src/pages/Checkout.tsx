@@ -2,9 +2,11 @@ import { Link } from "react-router";
 import Cart from "../components/Cart";
 import CheckoutForm from "../components/CheckoutForm";
 import { useCart } from "../context/useCart";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export default function Checkout() {
     const { items } = useCart()
+    useDocumentTitle('Checkout')
 
     return (
         <section className="max-w-2xl mx-auto space-y-6">

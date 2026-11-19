@@ -1,50 +1,46 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { Link } from "react-router";
 import { useCart } from "../context/useCart";
 import type { Product } from "../types/product";
 import { formatCurrency } from "../utils/formatCurrency";
 import { defaultVariant, findVariant, isInStock } from "../utils/productHelpers";
+import { useAddedFeedback } from "../hooks/useAddedFeedback";
 import VariantPicker from "./VariantPicker";
 
 interface ProductCardProps {
     product: Product
 }
 
-const ADDED_FEEDBACK_MS = 1500
-
 export default function ProductCard({ product }: ProductCardProps) {
     const { dispatch } = useCart()
-    const [justAdded, setJustAdded] = useState(false)
+    const [justAdded, showAdded] = useAddedFeedback()
     const [variantId, setVariantId] = useState(() => defaultVariant(product).id)
     const variant = findVariant(product, variantId) ?? defaultVariant(product)
-    const anyInStock = isInStock(product)
-
-    useEffect(() => {
-        if (!justAdded) {
-            return
-        }
-        const timer = setTimeout(() => setJustAdded(false), ADDED_FEEDBACK_MS)
-        return () => clearTimeout(timer)
-    }, [justAdded])
+    const productUrl = `/product/${product.slug}`
 
     function handleAdd() {
         dispatch({ type: 'ADD', product, variant })
-        setJustAdded(true)
+        showAdded()
     }
 
     return (
         <article className="bg-white p-4 rounded-xl shadow-md flex flex-col space-y-2">
-            <img
-                src={product.image}
-                alt={product.name}
-                className="w-full aspect-4/3 object-cover rounded-lg bg-cream"
-                loading="lazy"
-            />
+            <Link to={productUrl} tabIndex={-1} aria-hidden="true">
+                <img
+                    src={product.image}
+                    alt=""
+                    className="w-full aspect-4/3 object-cover rounded-lg bg-cream hover:opacity-90"
+                    loading="lazy"
+                />
+            </Link>
             <p className="text-sm text-gold uppercase">{product.category}</p>
-            <h3 className="text-xl font-display text-cocoa">{product.name}</h3>
+            <h3 className="text-xl font-display text-cocoa">
+                <Link to={productUrl} className="hover:text-gold">{product.name}</Link>
+            </h3>
             <p className="text-lg font-semibold text-espresso">{formatCurrency(variant.price)}</p>
             {product.description && <p className="text-sm text-cocoa leading-relaxed">{product.description}</p>}
             <VariantPicker product={product} selectedId={variant.id} onChange={setVariantId} />
-            {anyInStock
+            {isInStock(product)
                 ? <p className="text-sm text-green-700">In stock</p>
                 : <p className="text-sm text-red-600">Out of stock</p>}
             <button

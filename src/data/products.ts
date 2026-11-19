@@ -7,6 +7,7 @@ import type { Product } from "../types/product";
 export const products: Product[] = [
     {
         id: '1',
+        slug: 'cream',
         name: 'cream',
         category: 'skincare',
         image: "/images/cream.svg",
@@ -18,6 +19,7 @@ export const products: Product[] = [
     },
     {
         id: '2',
+        slug: 'perfume',
         name: 'perfume',
         category: 'fragrance',
         image: "/images/perfume.svg",
@@ -28,6 +30,7 @@ export const products: Product[] = [
     },
     {
         id: '3',
+        slug: 'eye-liner',
         name: 'eye-liner',
         category: 'makeup',
         image: "/images/liner.svg",
