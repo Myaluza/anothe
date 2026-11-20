@@ -74,6 +74,30 @@ test('phone: the Cart button goes to the checkout page', async ({ page }) => {
     await expect(page.locator('main').getByText(product.name, { exact: true })).toBeVisible()
 })
 
+test('smallest phones: the header stays on one line with a three-digit cart count', async ({ page }) => {
+    test.skip(!isMobile(page), 'Only the narrowest screens are at risk')
+    await page.setViewportSize({ width: 320, height: 640 })
+    await page.goto('/')
+    await addToCart(page, product.name)
+    // Raise the saved quantity to 100 so the Cart label is as wide as it gets.
+    await page.evaluate(() => {
+        const cart = JSON.parse(localStorage.getItem('anothe-cart')!)
+        cart[0].quantity = 100
+        localStorage.setItem('anothe-cart', JSON.stringify(cart))
+    })
+    await page.reload()
+
+    const header = page.getByRole('banner').filter({ has: page.getByRole('navigation', { name: 'Main' }) })
+    const cart = header.getByRole('link', { name: 'Cart (100)' })
+    await expect(cart).toBeVisible()
+    const about = await header.getByRole('link', { name: 'About' }).boundingBox()
+    const cartBox = (await cart.boundingBox())!
+    // Same row as the links, with room between them.
+    expect(Math.abs(cartBox.y + cartBox.height / 2 - (about!.y + about!.height / 2))).toBeLessThan(4)
+    expect(cartBox.x - (about!.x + about!.width)).toBeGreaterThanOrEqual(8)
+    expect((await header.boundingBox())!.height).toBeLessThan(80)
+})
+
 test('the cart is kept after a reload', async ({ page }) => {
     await page.goto('/')
     await addToCart(page, product.name)
