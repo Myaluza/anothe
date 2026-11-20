@@ -44,7 +44,7 @@ products.ts ──► shop / product page ──► cart (reducer) ──► sav
 - **Filters and search live in the URL** (`/?category=makeup&q=liner`), so a filtered view can be shared or bookmarked.
 - **One delivery fee** (`DELIVERY_FEE_CENTS`). Collection is free.
 - **Pages load on demand.** The shop page comes with the first download, and other pages download when first opened. Third-party code sits in a separate `vendor` file that rarely changes, so returning visitors keep it cached across deploys.
-- **Built files are cached for a year** (`/assets/*`, with content-hashed names). `index.html` is always re-checked, so a deploy reaches everyone straight away.
+- **Built files are cached for a year** (`/assets/*`, with content-hashed names). `index.html` is always re-checked, so a deploy reaches everyone straight away. Every other address is sent to the app, except `/assets/` and `/images/`: a file missing from those gives a real 404 instead of the shop page, so the smoke check notices.
 - **Fonts are self-hosted.** No requests go to Google: faster first paint, visitors' IP addresses aren't shared, and a strict security policy is possible.
 
 ## Security
