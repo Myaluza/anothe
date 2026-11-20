@@ -39,6 +39,32 @@ test('desktop: change quantities and remove items in the cart panel', async ({ p
     await expect(panel.getByText('Your cart is empty')).toBeVisible()
 })
 
+test('removing items keeps keyboard focus in the cart', async ({ page }) => {
+    const [first, second] = products.filter(p => p.variants[0].inStock)
+    const lineOf = (p: typeof first) => `${p.name} (${p.variants[0].label})`
+    await page.goto('/')
+    await addToCart(page, first.name)
+    await addToCart(page, second.name)
+
+    // Desktop uses the cart panel; phones use the checkout page. Both show the same cart.
+    let cart
+    if (isMobile(page)) {
+        await page.goto('/checkout')
+        cart = page.locator('main')
+    } else {
+        await page.getByRole('button', { name: 'Cart (2)' }).click()
+        cart = page.getByRole('dialog', { name: 'Your Cart' })
+    }
+
+    // Removing a line moves focus to the line that takes its place...
+    await cart.getByRole('button', { name: `Remove ${lineOf(first)}` }).click()
+    await expect(cart.getByRole('button', { name: `Remove ${lineOf(second)}` })).toBeFocused()
+
+    // ...and removing the last one (here with −) moves it to the "empty" message.
+    await cart.getByRole('button', { name: `Decrease quantity of ${lineOf(second)}` }).click()
+    await expect(cart.getByText('Your cart is empty')).toBeFocused()
+})
+
 test('phone: the Cart button goes to the checkout page', async ({ page }) => {
     test.skip(!isMobile(page), 'Desktop opens the cart panel instead')
     await page.goto('/')

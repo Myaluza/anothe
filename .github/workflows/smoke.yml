@@ -35,9 +35,17 @@ jobs:
           assets=$(grep -oE '/assets/[^"]+\.(js|css)' index.html | sort -u)
           [ -n "$assets" ] || { echo "::error::No /assets/ files referenced by index.html"; exit 1; }
           for asset in $assets; do
-            curl -sS --fail --retry 3 --retry-all-errors --max-time 20 -o /dev/null "$SITE$asset"
-            echo "ok  $asset"
+            # Check the type too: a missing file must not come back as the shop page.
+            type=$(curl -sS --fail --retry 3 --retry-all-errors --max-time 20 -o /dev/null -w '%{content_type}' "$SITE$asset")
+            case "$asset:$type" in
+              *.js:*javascript*|*.css:text/css*) echo "ok  $asset ($type)" ;;
+              *) echo "::error::$asset came back as '$type'"; exit 1 ;;
+            esac
           done
+          # A file that doesn't exist must be a 404, so missing files are never hidden.
+          status=$(curl -sS --max-time 20 -o /dev/null -w '%{http_code}' "$SITE/assets/smoke-check-missing.js")
+          [ "$status" = 404 ] || { echo "::error::A missing /assets/ file returned $status instead of 404"; exit 1; }
+          echo "ok  missing asset gives 404"
           # The main script contains the shop name, so a blank or wrong bundle is caught too.
           main=$(grep -oE '/assets/index-[^"]+\.js' index.html | head -1)
           curl -sS --fail --max-time 20 "$SITE$main" | grep -q 'Anothe' || { echo "::error::Main script looks wrong"; exit 1; }
